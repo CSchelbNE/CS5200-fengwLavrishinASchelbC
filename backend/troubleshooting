@@ -5,3 +5,6 @@ the reference to get_db is passed in as an object, not evoking it as a parameter
 #Routers
 The prefix of each router is determined by the specified prefix,
 if the router denotes /user then an api call to /user will be the path /user/user
+
+
+testing git pull mech
