@@ -1,14 +1,18 @@
 import './vendor_styles/bootstrap.min.css'
 import './App.css';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCoffee} from "@fortawesome/free-solid-svg-icons";
+import {Route, Routes} from "react-router"
+import {RouterProvider} from "react-router";
+import {BrowserRouter} from "react-router-dom";
+import LoginPopup from "./components/login/login-popup";
 
 function App() {
   return (
     <div className="App container-fluid">
-      <header className="App-header">
-        <FontAwesomeIcon icon={faCoffee}/>
-      </header>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<LoginPopup/>}/>
+            </Routes>
+        </BrowserRouter>
     </div>
   );
 }
