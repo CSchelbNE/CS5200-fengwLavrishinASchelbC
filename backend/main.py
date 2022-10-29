@@ -3,7 +3,7 @@ from fastapi import FastAPI # Fast api framework
 from starlette.middleware.cors import CORSMiddleware
 from backend import models
 from backend.database import engine
-from routers.post_operations import router
+from routers.end_user_operations import end_user_router
 
 '''
 Big cheats:
@@ -21,7 +21,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-app.include_router(router)
+app.include_router(end_user_router)
 
 
 # app.include_router(auth.router)

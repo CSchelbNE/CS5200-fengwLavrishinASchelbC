@@ -30,14 +30,6 @@ const LoginPopup = () => {
                     </FormControl>
                 </div>
                 <Button onClick={() => {
-                     if (userName === ""){
-                        console.log("username null")
-                        return;
-                    }
-                    if (password === "") {
-                        console.log("passwordn null")
-                        return;
-                    }
                     axios.get(URL_STRING).then((response) => {
                         const response_body = response.data[0];
                         if (response_body.name.toUpperCase() === userName.toUpperCase() &&
