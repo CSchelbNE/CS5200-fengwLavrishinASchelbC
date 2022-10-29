@@ -30,7 +30,7 @@ app.include_router(end_user_router)
 origins = [
     "http://localhost:3000",
     "https://localhost:3000/",
-    "localhost:3000"
+    "localhost:3000/*"
 ]
 
 app.add_middleware(
