@@ -1,46 +1,66 @@
-import {Box} from "@chakra-ui/react";
+import {Box, FormErrorMessage} from "@chakra-ui/react";
 import React from "react";
 import {FormControl, Input, FormLabel, FormHelperText, Button} from "@chakra-ui/react";
 import axios from "axios";
+import SignUpModal from "../signup/signup-screen";
 
+const Validate = (prop) => {
+    return prop === "";
+}
 
-
-const LoginPopup = () => {
-    const URL_STRING = "http://localhost:8000/users/users";
-    const [post, setPost] = React.useState(null);
+const LoginScreen = () => {
+    const URL_STRING = "http://localhost:8000/users/login";
     const [userName, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const handleUsernameChange = (e) => setUsername(e.target.value);
-    const handlePasswordChange = (e) => setPassword(e.target.value);
+    const handleUsernameChange = (e) => {
+        if (isUsernameError) {
+            setPasswordError(false)
+            setUsernameError(false);
+        }
+        setUsername(e.target.value);
+    }
+    const handlePasswordChange = (e) => {
+        if (isPasswordError){
+            setUsernameError(false);
+            setPasswordError(false)
+        }
+        setPassword(e.target.value);
+    }
+    const [isUsernameError, setUsernameError] = React.useState(false);
+    const [isPasswordError, setPasswordError] = React.useState(false);
 
+    const credentials =  {
+        "username" :userName,
+        "password" :password
+    }
 
     return (
         <div className="row d-flex align-items-center justify-content-center" style={{height: "100vh"}}>
             <Box borderRadius="lg" boxSize="sm" borderWidth="3px" p="5" className="d-flex flex-column justify-content-around align-items-center">
                 <div className="d-flex flex-column align-items-center" style={{width: "inherit"}}>
-                    <FormControl width="75%" mb="2" p="2">
+                    <FormControl width="75%" mb="2" p="2" isInvalid={isUsernameError}>
                         <FormLabel>Username</FormLabel>
                         <Input type='username' value={userName} onChange={handleUsernameChange} />
-                        {/*<FormHelperText>We'll never share your email.</FormHelperText>*/}
+                        <FormErrorMessage>Username is required</FormErrorMessage>
                     </FormControl>
-                    <FormControl width="75%" p="2">
+                    <FormControl width="75%" p="2" isInvalid={isPasswordError}>
                         <FormLabel>Password</FormLabel>
                         <Input type='password' value={password} onChange={handlePasswordChange} />
-                        {/*<FormHelperText>We'll never share your email.</FormHelperText>*/}
+                        <FormErrorMessage>Password is required</FormErrorMessage>
                     </FormControl>
                 </div>
                 <Button onClick={() => {
-                    axios.get(URL_STRING).then((response) => {
-                        const response_body = response.data[0];
-                        if (response_body.name.toUpperCase() === userName.toUpperCase() &&
-                            password === response_body.hashed_password){
-                            console.log("successfull");
-                        }
+                    if (Validate(userName)) setUsernameError(true);
+                    if (Validate(password)) setPasswordError(true);
+                    if (isPasswordError || isUsernameError) return;
+                    axios.post(URL_STRING, credentials).then((response) => {
+                        console.log(response.data)
                         });
                 }} width="100%">Login</Button>
+                <SignUpModal/>
             </Box>
         </div>
     )
 }
 
-export default LoginPopup
+export default LoginScreen
