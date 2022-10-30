@@ -1,8 +1,11 @@
 import {Box, FormErrorMessage} from "@chakra-ui/react";
+import {Link} from "react-router-dom";
 import React from "react";
 import {FormControl, Input, FormLabel, FormHelperText, Button} from "@chakra-ui/react";
 import axios from "axios";
 import SignUpModal from "../signup/signup-screen";
+import {useDispatch, useSelector} from "react-redux";
+import {addUser} from "../../redux/reducers/user";
 
 const Validate = (prop) => {
     return prop === "";
@@ -12,9 +15,11 @@ const LoginScreen = () => {
     const URL_STRING = "http://localhost:8000/users/login";
     const [userName, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const dispatch = useDispatch();
+    const state = useSelector(state => state.user);
     const handleUsernameChange = (e) => {
         if (isUsernameError) {
-            setPasswordError(false)
+            setPasswordError(false);
             setUsernameError(false);
         }
         setUsername(e.target.value);
@@ -22,7 +27,7 @@ const LoginScreen = () => {
     const handlePasswordChange = (e) => {
         if (isPasswordError){
             setUsernameError(false);
-            setPasswordError(false)
+            setPasswordError(false);
         }
         setPassword(e.target.value);
     }
@@ -49,13 +54,14 @@ const LoginScreen = () => {
                         <FormErrorMessage>Password is required</FormErrorMessage>
                     </FormControl>
                 </div>
-                <Button onClick={() => {
+                <Button component={Link} to={'/main'}  onClick={() => {
                     if (Validate(userName)) setUsernameError(true);
                     if (Validate(password)) setPasswordError(true);
                     if (isPasswordError || isUsernameError) return;
                     axios.post(URL_STRING, credentials).then((response) => {
-                        console.log(response.data)
-                        });
+                        dispatch(addUser(response.data));
+                        console.log(state)
+                        }).catch(error => console.log(error));
                 }} width="100%">Login</Button>
                 <SignUpModal/>
             </Box>

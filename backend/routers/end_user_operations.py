@@ -31,6 +31,6 @@ def get_users(db: Session = Depends(get_db)):
 def login(credentials: Credentials, db: Session = Depends(get_db)):
     # password = hash(credentials.password)
     result = db.query(models.User).filter(models.User.password
-                                          == credentials.password).filter(models.User.name == credentials.username).first()
-
-    return True if result is not None else False
+                                          == credentials.password).\
+        filter(models.User.name == credentials.username).first()
+    return result
