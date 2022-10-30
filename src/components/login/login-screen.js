@@ -60,7 +60,7 @@ const LoginScreen = () => {
                     if (isPasswordError || isUsernameError) return;
                     axios.post(URL_STRING, credentials).then((response) => {
                         dispatch(addUser(response.data));
-                        console.log(state)
+                        console.log("login successful as " + response.data.name);
                         }).catch(error => console.log(error));
                 }} width="100%">Login</Button>
                 <SignUpModal/>

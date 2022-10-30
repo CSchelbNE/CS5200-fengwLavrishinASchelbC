@@ -4,7 +4,17 @@
 /node_modules
 /.pnp
 .pnp.js
+*.log
 
+*.pot
+
+*.pyc
+
+*/*/*/__pycache__/
+
+*/*/__pycache__/
+
+*/__pycache__/
 # testing
 /coverage
 
