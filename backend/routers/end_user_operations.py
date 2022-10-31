@@ -16,7 +16,7 @@ end_user_router = APIRouter(
 def add_new_user(user: User, db: Session = Depends(get_db)):
     # hashed_password = hash(user.password)
     new_user = models.User(email=user.email, password=user.password, address=user.address,
-                           name=user.name)
+                           name=user.name, campus=user.campus)
     db.add(new_user)
     db.commit()
     return new_user

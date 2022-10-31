@@ -22,12 +22,15 @@ const SignUpModal = () => {
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [address, setAddress] = React.useState("");
+  const [selectedCampus, setCampus] = React.useState("");
+
   const URL_STRING = "http://localhost:8000/users/add-user";
   const new_user = {
     "name" : name,
     "password" : password,
     "address" : address,
-    "email" : email
+    "email" : email,
+    "campus" : selectedCampus
   }
   // Bug: Functionality could be refactored into subcomponents, for whatever reason calling the onChange callbacks
   // caused the entire map lambda generation of the <FormControl> elements to be rerendered every key press?
@@ -58,8 +61,8 @@ const SignUpModal = () => {
             </FormControl>
             <FormControl>
               <FormLabel>Campus:</FormLabel>
-              <Select placeholder="Select a Campus">
-                {campuses.map(campus => <option key={uuid()}>{campus}</option>)}
+              <Select value={selectedCampus} onChange={e => setCampus(e.target.value)} placeholder="Select a Campus">
+                {campuses.map(campus => <option value={campus} key={uuid()}>{campus}</option>)}
               </Select>
             </FormControl>
           </ModalBody>

@@ -1,7 +1,7 @@
 import {Box, FormErrorMessage} from "@chakra-ui/react";
 import {useNavigate} from "react-router";
 import React from "react";
-import {FormControl, Input, FormLabel, FormHelperText, Button} from "@chakra-ui/react";
+import {FormControl, Input, FormLabel, Button} from "@chakra-ui/react";
 import axios from "axios";
 import SignUpModal from "../signup/signup-screen";
 import {useDispatch} from "react-redux";
@@ -19,21 +19,14 @@ const LoginScreen = () => {
     const navigate = useNavigate();
 
     const handleUsernameChange = (e) => {
-        if (isUsernameError) {
-            setPasswordError(false);
-            setUsernameError(false);
-        }
+        if (isIncorrectCredentials) setCredentialError(false);
         setUsername(e.target.value);
     }
     const handlePasswordChange = (e) => {
-        if (isPasswordError){
-            setUsernameError(false);
-            setPasswordError(false);
-        }
+        if (isIncorrectCredentials) setCredentialError(false);
         setPassword(e.target.value);
     }
-    const [isUsernameError, setUsernameError] = React.useState(false);
-    const [isPasswordError, setPasswordError] = React.useState(false);
+    const [isIncorrectCredentials, setCredentialError] = React.useState(false);
 
     const credentials =  {
         "username" :userName,
@@ -44,22 +37,29 @@ const LoginScreen = () => {
         <div className="row d-flex align-items-center justify-content-center" style={{height: "100vh"}}>
             <Box borderRadius="lg" boxSize="sm" borderWidth="3px" p="5" className="d-flex flex-column justify-content-around align-items-center">
                 <div className="d-flex flex-column align-items-center" style={{width: "inherit"}}>
-                    <FormControl width="75%" mb="2" p="2" isInvalid={isUsernameError}>
+                    <FormControl width="75%" mb="2" p="2" isInvalid={isIncorrectCredentials}>
                         <FormLabel>Username</FormLabel>
                         <Input type='username' value={userName} onChange={handleUsernameChange} />
-                        <FormErrorMessage>Username is required</FormErrorMessage>
                     </FormControl>
-                    <FormControl width="75%" p="2" isInvalid={isPasswordError}>
+                    <FormControl width="75%" p="2" isInvalid={isIncorrectCredentials}>
                         <FormLabel>Password</FormLabel>
                         <Input type='password' value={password} onChange={handlePasswordChange} />
-                        <FormErrorMessage>Password is required</FormErrorMessage>
+                        <FormErrorMessage>Username or password is invalid</FormErrorMessage>
                     </FormControl>
                 </div>
                 <Button onClick={() => {
-                    if (Validate(userName)) setUsernameError(true);
-                    if (Validate(password)) setPasswordError(true);
-                    if (isPasswordError || isUsernameError) return;
+                    // Handle null credentials
+                    if (!password || !userName) {
+                          setCredentialError(true);
+                          return;
+                    }
                     axios.post(URL_STRING, credentials).then((response) => {
+                        // Handle invalid credentials
+                        if (!response.data) {
+                            setCredentialError(true);
+                            return;
+                        }
+                        // Add the user to the redux store and then navigate to main if valid.
                         dispatch(addUser(response.data));
                         console.log("login successful as " + response.data.name);
                         navigate("/main")
