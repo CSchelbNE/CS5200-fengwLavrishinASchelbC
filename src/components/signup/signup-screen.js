@@ -24,7 +24,6 @@ const SignUpModal = () => {
   const [address, setAddress] = React.useState("");
   const URL_STRING = "http://localhost:8000/users/add-user";
   const new_user = {
-    "user_id": 8,
     "name" : name,
     "password" : password,
     "address" : address,
@@ -72,6 +71,7 @@ const SignUpModal = () => {
                 console.log(new_user);
                 axios.post(URL_STRING, new_user).then((response) => {
                         console.log(response)
+                        onClose();
                         }).catch((error => console.log(error)))}}variant='ghost'>Submit</Button>
           </ModalFooter>
         </ModalContent>
