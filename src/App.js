@@ -3,7 +3,7 @@ import "./bootstrap.min.css"
 import {Route, Routes} from "react-router"
 import {BrowserRouter} from "react-router-dom";
 import LoginScreen from "./components/login/login-screen";
-import SignUpModal from "./components/signup/signup-screen";
+import MainView from "./components/main/main-view";
 
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
         <BrowserRouter>
                 <Routes>
                     <Route index element={<LoginScreen/>}/>
-                    <Route path="/main" element={<SignUpModal/>}/>
+                    <Route path="/main" element={<MainView/>}/>
                 </Routes>
         </BrowserRouter>
     </div>

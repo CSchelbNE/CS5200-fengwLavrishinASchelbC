@@ -1,10 +1,10 @@
 import {Box, FormErrorMessage} from "@chakra-ui/react";
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router";
 import React from "react";
 import {FormControl, Input, FormLabel, FormHelperText, Button} from "@chakra-ui/react";
 import axios from "axios";
 import SignUpModal from "../signup/signup-screen";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {addUser} from "../../redux/reducers/user";
 
 const Validate = (prop) => {
@@ -16,7 +16,8 @@ const LoginScreen = () => {
     const [userName, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const dispatch = useDispatch();
-    const state = useSelector(state => state.user);
+    const navigate = useNavigate();
+
     const handleUsernameChange = (e) => {
         if (isUsernameError) {
             setPasswordError(false);
@@ -54,13 +55,14 @@ const LoginScreen = () => {
                         <FormErrorMessage>Password is required</FormErrorMessage>
                     </FormControl>
                 </div>
-                <Button component={Link} to={'/main'}  onClick={() => {
+                <Button onClick={() => {
                     if (Validate(userName)) setUsernameError(true);
                     if (Validate(password)) setPasswordError(true);
                     if (isPasswordError || isUsernameError) return;
                     axios.post(URL_STRING, credentials).then((response) => {
                         dispatch(addUser(response.data));
                         console.log("login successful as " + response.data.name);
+                        navigate("/main")
                         }).catch(error => console.log(error));
                 }} width="100%">Login</Button>
                 <SignUpModal/>
