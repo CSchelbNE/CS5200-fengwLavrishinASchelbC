@@ -24,7 +24,6 @@ const SignUpModal = () => {
   const [address, setAddress] = React.useState("");
   const URL_STRING = "http://localhost:8000/users/add-user";
   const new_user = {
-    "user_id": 8,
     "name" : name,
     "password" : password,
     "address" : address,
