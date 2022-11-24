@@ -1,8 +1,6 @@
-import pymysql.cursors
 import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, String, Integer
 
 DATABASE_URL = "mysql+pymysql://admin:cs5200finalproject@database-1.c5mdh4lrufto.us-east-2.rds.amazonaws.com" \
                "/ticket_system"
@@ -25,6 +23,6 @@ while True:
 def get_db():
     db = session()
     try:
-        yield db
+        yield conn
     finally:
         db.close()

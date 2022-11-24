@@ -1,8 +1,6 @@
 import uvicorn
 from fastapi import FastAPI # Fast api framework
 from starlette.middleware.cors import CORSMiddleware
-from backend import models
-from backend.database import engine
 from routers.end_user_operations import end_user_router
 
 '''
@@ -17,7 +15,6 @@ loopbackaddress:port/redoc <- Redoc documentation
 #git
 
 # Causes the models in models.py to generate their respective relational tables in the db on run
-models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
