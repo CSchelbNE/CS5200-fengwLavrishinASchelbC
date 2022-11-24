@@ -1,14 +1,20 @@
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Box, Flex, Select} from "@chakra-ui/react";
 import tmp from "../../redux/reducers/tmp.json"
 import CreateTicketDrawer from "./create-ticket-drawer";
 import TicketListItem from "./ticket-list-item";
 import {useEffect, useState} from "react";
+import {changeFocus} from "../../redux/reducers/ticket-reducer";
+import {getTicketsThunk} from "../../redux/services/tickets-thunk";
 
 const MainView = () => {
     const currentUser = useSelector(state => state.user);
-    const [focused, setFocused] = useState("");
-    console.log(focused);
+    const tickets = useSelector((state) => state.tickets.tickets);
+    const dispatch = useDispatch();
+    useEffect(() => {
+            dispatch(getTicketsThunk("10"))
+    },[]);
+    console.log(tickets)
     return (
         <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", maxWidth: "100vw"}}>
             <CreateTicketDrawer/>
@@ -19,14 +25,7 @@ const MainView = () => {
                                 <option value="open-tickets">Open Tickets</option>
                                 <option value="closed-tickets">Closed Tickets</option>
                             </Select>
-                            {tmp.map(e => {
-                                if (e.id === focused.id){
-                                    return <TicketListItem props={{...e, isFocused: false, callback: setFocused}}/>
-                                } else{
-                                    return <TicketListItem props={{...e, isFocused: true, callback: setFocused}}/>
-                                }
-                            })
-                            }
+                            {tickets.map((e) => <TicketListItem props={e}/>)}
                         </Box>
                         <Box height="100%" width="80%" borderWidth="1px">
                         </Box>

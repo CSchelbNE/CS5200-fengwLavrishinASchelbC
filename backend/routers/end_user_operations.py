@@ -48,3 +48,6 @@ def login(credentials: Credentials, db: Engine = Depends(get_db)):
 
     except passlib.exc.UnknownHashError:
         print("***** passlib.exc.UnknownHashError: User potentially has unhashed password stored in DB *****")
+
+
+

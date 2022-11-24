@@ -1,16 +1,18 @@
 import {createSlice} from "@reduxjs/toolkit";
-import tmp from "./tmp.json"
+import {getTicketsThunk} from "../services/tickets-thunk";
 
 const ticketSlice = createSlice({
     name: "user",
-    initialState:tmp,
-    reducers: {
-        changeFocus(state, action){
-            const index = state.findIndex(ticket => ticket.id === action.payload.id);
-            console.log(index)
-        }
+    initialState: {
+        tickets: []
+    },
+    extraReducers: {
+        [getTicketsThunk.fulfilled]:
+            (state, {payload}) => {
+                state.tickets = payload.data
+            }
     }
-});
+    }
+);
 
-export const {changeFocus} = ticketSlice.actions
 export default ticketSlice.reducer
