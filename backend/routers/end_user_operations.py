@@ -43,6 +43,8 @@ def login(credentials: Credentials, db: Engine = Depends(get_db)):
 
     except AttributeError:
         print("***** AttributeError: Ensure username is valid *****")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Invalid login credentials")
 
     except passlib.exc.UnknownHashError:
         print("***** passlib.exc.UnknownHashError: User potentially has unhashed password stored in DB *****")

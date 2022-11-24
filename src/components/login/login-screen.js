@@ -54,16 +54,12 @@ const LoginScreen = () => {
                           return;
                     }
                     axios.post(URL_STRING, credentials).then((response) => {
-                        // Handle invalid credentials
-                        if (!response.data) {
-                            setCredentialError(true);
-                            return;
-                        }
+
                         // Add the user to the redux store and then navigate to main if valid.
                         dispatch(addUser(response.data));
                         console.log("login successful as " + response.data.name);
                         navigate("/main")
-                        }).catch(error => console.log(error));
+                        }).catch(error => {setCredentialError(true)});
                 }} width="100%">Login</Button>
                 <SignUpModal/>
             </Box>
