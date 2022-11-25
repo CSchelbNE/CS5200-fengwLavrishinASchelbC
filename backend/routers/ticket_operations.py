@@ -24,6 +24,10 @@ def getUsersTickets(user_id: int, db: Engine = Depends(get_db)):
 
 
 
-@ticket_router.post("/add-ticket")
+@ticket_router.post("/create-ticket")
 def createTicket(ticket, db: Engine = Depends(get_db)):
-    pass
+    conn = db.connect()
+    trans = conn.begin()
+    print(ticket)
+    # conn.execute(f"""INSERT INTO problem (subject,type,description,ticket_id) VALUES %s, %s, %s, %s""")
+    # trans.commit()

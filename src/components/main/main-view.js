@@ -1,19 +1,25 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Box, Flex, Select} from "@chakra-ui/react";
-import tmp from "../../redux/reducers/tmp.json"
 import CreateTicketDrawer from "./create-ticket-drawer";
 import TicketListItem from "./ticket-list-item";
 import {useEffect, useState} from "react";
-import {changeFocus} from "../../redux/reducers/ticket-reducer";
 import {getTicketsThunk} from "../../redux/services/tickets-thunk";
+import {useNavigate} from "react-router";
 
 const MainView = () => {
+    const navigation = useNavigate();
     const currentUser = useSelector(state => state.user);
     const tickets = useSelector((state) => state.tickets.tickets);
     const dispatch = useDispatch();
     useEffect(() => {
-            dispatch(getTicketsThunk("10"))
-    },[]);
+            // Currently catch if a page is refreshed and the user isn't authenticated, prevents null pointer
+            //exception
+            if (currentUser === null) {
+                navigation("/")
+                return;
+            }
+            dispatch(getTicketsThunk(currentUser.user_id))
+    },[currentUser]);
     console.log(tickets)
     return (
         <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", maxWidth: "100vw"}}>
