@@ -62,7 +62,13 @@ const LoginScreen = () => {
                         // Add the user to the redux store and then navigate to main if valid.
                         dispatch(addUser(response.data));
                         console.log("login successful as " + response.data.name);
-                        navigate("/main")
+                        if (response.data.type === "end-user"){
+                            navigate("/main")
+                        } else if (response.data.type === "admin"){
+                            navigate("/admin")
+                        } else if (response.data.type === "tech"){
+                            navigate("/tech")
+                        }
                         }).catch(error => {setCredentialError(true)});
                 }} width="100%">Login</Button>
                 <SignUpModal/>

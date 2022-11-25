@@ -7,6 +7,7 @@ class User(BaseModel):
     name: str
     password: str
     address: str
+    type: str
 
 
 class Credentials(BaseModel):
@@ -22,3 +23,4 @@ class Ticket(BaseModel):
     priority: str
     date_created: str
     type: str
+

@@ -19,10 +19,7 @@ def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
     return db.execute("""SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s""", user_id).all()
 
 
-
-
-
-@ticket_router.post("/create-ticket")
+@ticket_router.post("/create-ticket") # something here for if ticket == hardware: trigger
 def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
     conn = db.connect()
     trans = conn.begin()

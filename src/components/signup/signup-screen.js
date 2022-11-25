@@ -26,6 +26,7 @@ const SignUpModal = () => {
 
   const URL_STRING = "http://localhost:8000/users/add-user";
   const new_user = {
+    "type" : "end-user",
     "name" : name,
     "password" : password,
     "address" : address,

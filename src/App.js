@@ -4,6 +4,8 @@ import {Route, Routes} from "react-router"
 import {BrowserRouter} from "react-router-dom";
 import LoginScreen from "./components/login/login-screen";
 import MainView from "./components/main/main-view";
+import AdminMainView from "./components/main/admin-main-view";
+import TechMainView from "./components/main/tech-main-view";
 
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
                 <Routes>
                     <Route index element={<LoginScreen/>}/>
                     <Route path="/main" element={<MainView/>}/>
+                    <Route path="/admin" element={<AdminMainView/>}/>
+                    <Route path="/tech" element={<TechMainView/>}/>
                 </Routes>
         </BrowserRouter>
     </div>
