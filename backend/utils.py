@@ -12,7 +12,6 @@ def hash(password: str):
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-
 if __name__ == "__main__":
     input = input("Enter password to be hashed: ")
     print(hash(input))

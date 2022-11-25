@@ -7,6 +7,7 @@ class User(BaseModel):
     name: str
     password: str
     address: str
+    type: str
 
 
 class Credentials(BaseModel):
