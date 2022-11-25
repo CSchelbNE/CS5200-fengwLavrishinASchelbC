@@ -6,6 +6,7 @@ import axios from "axios";
 import SignUpModal from "../signup/signup-screen";
 import {useDispatch} from "react-redux";
 import {addUser} from "../../redux/reducers/user";
+import {changeFocus} from "../../redux/reducers/ticket-reducer";
 
 const Validate = (prop) => {
     return prop === "";
@@ -17,6 +18,9 @@ const LoginScreen = () => {
     const [password, setPassword] = React.useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    // Just exists to clear state bleeding from when the back button is pressed and a new user logs in
+    dispatch(changeFocus(null));
 
     const handleUsernameChange = (e) => {
         if (isIncorrectCredentials) setCredentialError(false);
