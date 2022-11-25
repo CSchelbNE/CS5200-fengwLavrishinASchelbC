@@ -1,4 +1,4 @@
-import {Box, FormErrorMessage} from "@chakra-ui/react";
+import {Box, Heading, FormErrorMessage} from "@chakra-ui/react";
 import {useNavigate} from "react-router";
 import React from "react";
 import {FormControl, Input, FormLabel, Button} from "@chakra-ui/react";
@@ -38,42 +38,46 @@ const LoginScreen = () => {
     }
 
     return (
-        <div className="row d-flex align-items-center justify-content-center" style={{height: "100vh"}}>
-            <Box borderRadius="lg" boxSize="sm" borderWidth="3px" p="5" className="d-flex flex-column justify-content-around align-items-center">
-                <div className="d-flex flex-column align-items-center" style={{width: "inherit"}}>
-                    <FormControl width="75%" mb="2" p="2" isInvalid={isIncorrectCredentials}>
-                        <FormLabel>Username</FormLabel>
-                        <Input type='username' value={userName} onChange={handleUsernameChange} />
-                    </FormControl>
-                    <FormControl width="75%" p="2" isInvalid={isIncorrectCredentials}>
-                        <FormLabel>Password</FormLabel>
-                        <Input type='password' value={password} onChange={handlePasswordChange} />
-                        <FormErrorMessage>Invalid Login Credentials</FormErrorMessage>
-                    </FormControl>
-                </div>
-                <Button onClick={() => {
-                    // Handle null credentials
-                    if (!password || !userName) {
-                          setCredentialError(true);
-                          return;
-                    }
-                    axios.post(URL_STRING, credentials).then((response) => {
-
-                        // Add the user to the redux store and then navigate to main if valid.
-                        dispatch(addUser(response.data));
-                        console.log("login successful as " + response.data.name);
-                        if (response.data.type === "end-user"){
-                            navigate("/main")
-                        } else if (response.data.type === "admin"){
-                            navigate("/admin")
-                        } else if (response.data.type === "tech"){
-                            navigate("/tech")
+            <div className="login-bg row position-relative" style={{height: "100vh"}}>
+                <Heading className="d-flex flex-row" height="fit-content" width="100vw" p="2" bg="black" fontSize="2.5rem">
+                    <div>Northeastern University</div>
+                </Heading>
+                <Box borderRadius="lg" boxSize="sm" borderWidth="3px" p="5" className="bg-white d-flex flex-column
+                justify-content-around position-absolute top-50 start-50 translate-middle align-items-center">
+                    <div className="d-flex flex-column align-items-center" style={{width: "inherit"}}>
+                        <FormControl width="75%" mb="2" p="2" isInvalid={isIncorrectCredentials}>
+                            <FormLabel>Username</FormLabel>
+                            <Input type='username' value={userName} onChange={handleUsernameChange} />
+                        </FormControl>
+                        <FormControl width="75%" p="2" isInvalid={isIncorrectCredentials}>
+                            <FormLabel>Password</FormLabel>
+                            <Input type='password' value={password} onChange={handlePasswordChange} />
+                            <FormErrorMessage>Invalid Login Credentials</FormErrorMessage>
+                        </FormControl>
+                    </div>
+                    <Button onClick={() => {
+                        // Handle null credentials
+                        if (!password || !userName) {
+                              setCredentialError(true);
+                              return;
                         }
-                        }).catch(error => {setCredentialError(true)});
-                }} width="100%">Login</Button>
-                <SignUpModal/>
-            </Box>
-        </div>
+                        axios.post(URL_STRING, credentials).then((response) => {
+
+                            // Add the user to the redux store and then navigate to main if valid.
+                            dispatch(addUser(response.data));
+                            console.log("login successful as " + response.data.name);
+                            if (response.data.type === "end-user"){
+                                navigate("/main")
+                            } else if (response.data.type === "admin"){
+                                navigate("/admin")
+                            } else if (response.data.type === "tech"){
+                                navigate("/tech")
+                            }
+                            }).catch(error => {setCredentialError(true)});
+                    }} width="100%">Login</Button>
+                    <SignUpModal/>
+                </Box>
+            </div>
     )
 }
 

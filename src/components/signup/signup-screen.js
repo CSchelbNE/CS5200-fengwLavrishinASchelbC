@@ -40,7 +40,7 @@ const SignUpModal = () => {
       <Link onClick={onOpen} className="align-self-start text-decoration-none">Request Access</Link>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent zIndex="9999">
           <ModalHeader>Sign Up</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
