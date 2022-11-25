@@ -12,3 +12,13 @@ class User(BaseModel):
 class Credentials(BaseModel):
     username: str
     password: str
+
+
+class Ticket(BaseModel):
+    description: str
+    user_id: int
+    subject: str
+    status: str
+    priority: str
+    date_created: str
+    type: str

@@ -26,7 +26,6 @@ CONSTRAINT problem_fk1 foreign key(ticket_id) references ticket(ticket_id)
 on update restrict on delete restrict
 );
 
-
 INSERT INTO ticket (priority,date_created,status,user_id) VALUES ("low","2020-02-05","open",10);
 INSERT INTO problem (subject, type,description,ticket_id) VALUES ("Unable to access records", "Financial Aid", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Duis posuere diam tortor, nec condimentum nunc fringilla at.", 0);
