@@ -14,46 +14,50 @@ import {
   InputLeftAddon,
   InputRightAddon,
   Textarea,
-  Button,
-  Select,
+  Button, FormControl, FormErrorMessage,
 } from '@chakra-ui/react'
+import {Select} from "chakra-react-select";
 import {useDisclosure} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {createTicketsThunk} from "../../redux/services/tickets-thunk";
 import {useNavigate} from "react-router";
+import {useChakraSelectProps} from "chakra-react-select";
 
 function CreateTicketDrawer() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef();
   const currentUser = useSelector(state => state.user);
+  const typeArr = [{value: "Hardware", label: "Hardware"}, {value: "Software", label: "Software" },
+      {value: "Financial Aid", label: "Financial-Aid"},{value:"Housing", label:"Housing"}, {value: "Other", label: "Other"}];
   const dispatch = useDispatch();
   const navigation = useNavigate();
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+   const selectProps = useChakraSelectProps({
+    value: selectedType,
+    onChange: setSelectedType,
+  });
   const createTicket = () => {
-      console.log("subject: " +subject);
-      console.log("description: " + description);
-
-
+      if (currentUser === null) {
+              navigation("/")
+              return;
+        }
       var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
-      // console.log("type" + type);
-      if (subject != "" && description != ""){
-        if (currentUser === null) {
-                navigation("/")
-                return;
-          }
-        const newTicket = {subject: subject, description: description, user_id: currentUser.user_id, type: "placeholder",
-        date_created: utc, priorty: "low"}
-        dispatch(createTicketsThunk(newTicket))
-      }
+      const newTicket = {"subject": subject, "description": description, "user_id": currentUser.user_id, "type":
+            selectedType.value, "date_created": utc, "status": "OPEN", "priority": "low"}
+      console.log(newTicket)
+      dispatch(createTicketsThunk(newTicket))
+      // For whatever reason after the drawer is closed these fields preserve the data that was previously entered
+      setSubject("")
+      setDescription("")
       onClose();
   }
   return (
     <>
-      <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen}>
+      <Button leftIcon={<AddIcon />} colorScheme='teal' className="m-4" onClick={onOpen}>
         Create Ticket
       </Button>
       <Drawer
@@ -72,27 +76,33 @@ function CreateTicketDrawer() {
           <DrawerBody>
             <Stack spacing='24px'>
               <Box>
-                <FormLabel htmlFor='username'>Subject</FormLabel>
-                <Input
-                    onChange={(e) => setSubject(e.target.value)}
-                  ref={firstField}
-                  id='username'
-                  placeholder='Please enter a subject'
-                />
+                <FormControl>
+                  <FormLabel htmlFor='username'>Subject</FormLabel>
+                  <Input
+                      onChange={(e) => {
+                          setSubject(e.target.value)
+                      }}
+                    ref={firstField}
+                    id='username'
+                    placeholder='Please enter a subject'
+                  />
+                </FormControl>
+                  <FormErrorMessage>Both Fields Must Be Completed</FormErrorMessage>
               </Box>
                <Box>
-                {/*<FormLabel htmlFor='owner'>Problem Type</FormLabel>*/}
-                {/*<Select onChange={(e) => console.log(e)} id='type' defaultValue='Select type...'>*/}
-                {/*    <option value='hardware'>Hardware Failure</option>*/}
-                {/*    <option value='software'>Software Failure</option>*/}
-                {/*    <option value='financial'>Financial Aide</option>*/}
-                {/*    <option value='housing'>Housing</option>*/}
-                {/*    <option value='other'>Other</option>*/}
-                {/*</Select>*/}
+                <FormLabel htmlFor='owner'>Problem Type</FormLabel>
+                <Select options={typeArr} value={selectedType} onChange={setSelectedType} id='type' defaultValue='Select type...'>
+                    {/*{typeArr.map((e) => <option onSelect={(e)=>{console.log()}} value={e}>{e}</option>)}*/}
+                </Select>
               </Box>
               <Box>
-                <FormLabel htmlFor='desc'>Description</FormLabel>
-                <Textarea onChange={(e) => setDescription(e.target.value)} id='desc' rows="15"/>
+                <FormControl>
+                  <FormLabel htmlFor='desc'>Description</FormLabel>
+                  <Textarea onChange={(e) => {
+                      setDescription(e.target.value);
+                  }} id='desc' rows="15"/>
+                <FormErrorMessage>Both Fields Must Be Completed</FormErrorMessage>
+                </FormControl>
               </Box>
             </Stack>
           </DrawerBody>

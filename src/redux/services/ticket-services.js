@@ -6,6 +6,5 @@ export const getTickets = (userId) => {
 }
 
 export const createTicket = (ticket) => {
-    console.log(ticket)
     return axios.post(URL_STRING+"create-ticket", ticket)
 }

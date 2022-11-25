@@ -9,12 +9,13 @@ const ticketSlice = createSlice({
     extraReducers: {
         [getTicketsThunk.fulfilled]:
             (state, {payload}) => {
+                console.log("Successfully retrieved tickets")
                 state.tickets = payload.data
             },
         [createTicketsThunk.fulfilled]:
             (state, {payload}) => {
                 console.log(payload.data)
-                // state.push(payload)
+                state.tickets.push(payload.data)
             }
 
     }

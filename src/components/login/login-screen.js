@@ -44,7 +44,7 @@ const LoginScreen = () => {
                     <FormControl width="75%" p="2" isInvalid={isIncorrectCredentials}>
                         <FormLabel>Password</FormLabel>
                         <Input type='password' value={password} onChange={handlePasswordChange} />
-                        <FormErrorMessage>Username or password is invalid</FormErrorMessage>
+                        <FormErrorMessage>Invalid Login Credentials</FormErrorMessage>
                     </FormControl>
                 </div>
                 <Button onClick={() => {
