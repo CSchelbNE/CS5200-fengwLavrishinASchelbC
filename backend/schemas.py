@@ -22,3 +22,13 @@ class Ticket(BaseModel):
     priority: str
     date_created: str
     type: str
+
+class Approval(BaseModel):
+    status: str
+    description: str
+    type: str
+
+
+
+
+

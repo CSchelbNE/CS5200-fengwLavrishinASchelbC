@@ -26,7 +26,12 @@ def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
 def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
     conn = db.connect()
     trans = conn.begin()
-    new_ticket = conn.execute(f"""call createTicket(%s,%s,%s,%s,%s,%s,%s)""", (str(ticket.subject), str(ticket.type),
+    if (ticket.type == "Hardware"):
+        conn.execute(f"""call createTicketWithApproval(%s,%s,%s,%s,%s,%s,%s)""", (str(ticket.subject), str(ticket.type),
+                         str(ticket.description), str(ticket.priority), str(ticket.status), str(ticket.date_created),
+                                                                        str(ticket.user_id))).first()
+    else:
+        new_ticket = conn.execute(f"""call createTicket(%s,%s,%s,%s,%s,%s,%s)""", (str(ticket.subject), str(ticket.type),
                          str(ticket.description), str(ticket.priority), str(ticket.status), str(ticket.date_created),
                                                                         str(ticket.user_id))).first()
     trans.commit()
