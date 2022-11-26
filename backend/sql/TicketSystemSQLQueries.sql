@@ -36,7 +36,7 @@ on update restrict on delete restrict
 
 DROP TABLE IF EXISTS approval;
 create table approval(
-	approvalid SERIAL primary key,
+	approval_id SERIAL primary key,
 	status varchar(64) NOT NULL,
 	ticket_id BIGINT UNSIGNED,
 	CONSTRAINT approval_fk1 foreign key(ticket_id) references ticket(ticket_id)
@@ -72,6 +72,26 @@ CREATE PROCEDURE createTicketWithApproval(IN n_subject VARCHAR(25), IN n_type VA
         SELECT * FROM ticket NATURAL JOIN problem WHERE ticket_id = n_ticket_id;
 END $$
 DELIMITER ;
+SELECT * FROM ticket;
+
+DROP PROCEDURE IF EXISTS updateTicketProblem;
+DELIMITER $$
+CREATE PROCEDURE updateTicketProblem(IN n_subject VARCHAR(25), IN n_type VARCHAR(64), 
+				IN n_description VARCHAR(255), IN n_ticket_id BIGINT UNSIGNED)
+	BEGIN
+		UPDATE problem SET 
+		description = n_description,
+        subject = n_subject,
+        type = n_type
+        WHERE n_ticket_id = ticket_id;
+        IF (n_type = "Hardware") THEN INSERT INTO approval (status, ticket_id) VALUES ("REQUIRES APPROVAL", n_ticket_id);
+        END IF;
+        IF (n_type != "Hardware") THEN DELETE FROM approval WHERE ticket_id = n_ticket_id;
+        END IF;
+		SELECT * FROM ticket NATURAL JOIN problem WHERE ticket_id = n_ticket_id;
+END $$
+DELIMITER ;
+
 
 -- Admin Username: admin1 Password: abc123
 -- Tech Username: tech1 Password: 123abc
@@ -79,3 +99,5 @@ INSERT INTO users (password, name, address, email, type)
     VALUES("$2b$12$CVFokaV.Cxyp1emjsAq6ZOkYMhKJwbkgW4O729c8cUlpmYJbeKr9S", "admin1", "abcd", "admin@neu.edu", "admin"),
     ("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech1", "abcd", "tech1@neu.edu", "tech");
 
+SELECT * FROM approval JOIN (SELECT * FROM ticket NATURAL JOIN problem) 
+             AS P on p.ticket_id = approval.ticket_id;

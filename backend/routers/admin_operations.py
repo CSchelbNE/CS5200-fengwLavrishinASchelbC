@@ -16,7 +16,8 @@ admin_router = APIRouter(
 
 @admin_router.get("/get-all-approvals")
 def get_approvals(db: Engine = Depends(get_db)):
-    return db.execute("""SELECT * FROM approvals""")
+    return db.execute("""SELECT * FROM approval JOIN (SELECT * FROM ticket NATURAL JOIN problem) 
+             AS P on p.ticket_id = approval.ticket_id;""").all()
 
 
 @admin_router.put("/status-change/{approval_id}")

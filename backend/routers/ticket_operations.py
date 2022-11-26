@@ -44,7 +44,3 @@ def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
                                                                         str(ticket.user_id))).first()
     trans.commit()
     return new_ticket
-    # conn.execute(f"""INSERT INTO problem (subject,type,description,tick) VALUES %s, %s, %s, %s""",
-    #              (str(ticket.subject), str(ticket.type), str(ticket.description), str(new_ticket.ticket_id)))
-    # trans.commit()
-    # return conn.execute("""SELECT * FROM ticket NATURAL JOIN problem WHERE ticket_id = %s""", new_ticket.ticket_id).first()
