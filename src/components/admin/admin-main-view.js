@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {Box, Flex, Select} from "@chakra-ui/react";
 import uuid from "react-uuid";
 import {changeFocusedApproval} from "../../redux/reducers/admin-reducer";

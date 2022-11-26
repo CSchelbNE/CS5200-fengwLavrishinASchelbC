@@ -31,7 +31,7 @@ type varchar(64) NOT NULL,
 description varchar(255) NOT NULL,
 ticket_id BIGINT UNSIGNED,
 CONSTRAINT problem_fk1 foreign key(ticket_id) references ticket(ticket_id)
-on update restrict on delete restrict
+on update restrict on delete CASCADE
 );
 
 DROP TABLE IF EXISTS approval;
@@ -40,7 +40,7 @@ create table approval(
 	status varchar(64) NOT NULL,
 	ticket_id BIGINT UNSIGNED,
 	CONSTRAINT approval_fk1 foreign key(ticket_id) references ticket(ticket_id)
-	on update restrict on delete restrict
+	on update restrict on delete CASCADE
 );
 
 
@@ -106,12 +106,12 @@ DROP PROCEDURE IF EXISTS deleteTicket;
 DELIMITER $$
 CREATE PROCEDURE deleteTicket(IN n_ticket_id BIGINT UNSIGNED)
 	BEGIN 
+		DECLARE d_approval_id BIGINT UNSIGNED;
+        DECLARE d_ticket_id BIGINT UNSIGNED;
 		SELECT * FROM approval RIGHT OUTER JOIN (SELECT * FROM ticket NATURAL JOIN problem WHERE status="OPEN") AS P on P.ticket_id = approval.ticket_id WHERE P.ticket_id = n_ticket_id;
 		
 END $$
 DELIMITER ;
-
-CALL deleteTIcket(2);
 
 -- Admin Username: admin1 Password: abc123
 -- Tech Username: tech1 Password: 123abc
