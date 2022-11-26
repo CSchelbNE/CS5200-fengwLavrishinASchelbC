@@ -3,11 +3,12 @@ import EditTicketModal from "./edit-ticket-modal";
 
 
 const FocalTicket = ({ticket}) => {
+    console.log(ticket)
 
     return(
         <div className="d-flex flex-column pt-1" style={{height: "95%", width: "95%"}}>
             <div className="d-flex justify-content-end mb-2">
-                <EditTicketModal ticket={ticket} mt="1" colorScheme="gray"/>
+                <EditTicketModal  ticket={ticket} mt="1" colorScheme="gray"/>
             </div>
             <FormControl mb="3" height="fit-content" className="d-flex flex-row align-items-center ms-3 ">
                 <FormLabel className="w-25">Subject: </FormLabel>

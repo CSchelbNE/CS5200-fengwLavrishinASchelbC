@@ -27,7 +27,7 @@ const MainView = () => {
                 return;
             }
             dispatch(getTicketsThunk(currentUser.user_id))
-    },[focalTicket]);
+    },[]);
     return (
         <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", maxWidth: "100vw"}}>
             <CreateTicketDrawer/>

@@ -12,13 +12,11 @@ import {
 import {Select} from "chakra-react-select";
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
-import {useNavigate} from "react-router";
 import {useDisclosure} from "@chakra-ui/react";
-import {createTicketsThunk} from "../../redux/services/tickets-thunk";
 
 
 const EditTicketModal = ({ticket}) => {
-      const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const firstField = React.useRef();
     const typeArr = [{value: "Hardware", label: "Hardware"}, {value: "Software", label: "Software" },
         {value: "Financial Aid", label: "Financial-Aid"},{value:"Housing", label:"Housing"}, {value: "Other", label: "Other"}];
@@ -26,11 +24,12 @@ const EditTicketModal = ({ticket}) => {
     const [subject, setSubject] = useState(ticket.subject);
     const [description, setDescription] = useState(ticket.description);
     const [selectedType, setSelectedType] = useState(ticket.type);
-     const editTicket = () => {
+    console.log(subject)
+    const editTicket = () => {
       const newTicket = {"subject": subject, "description": description, "user_id": ticket.user_id, "type":
             selectedType.value, "date_created": ticket.date_created, "status": ticket.status, "priority": ticket.priority, "ticket_id": ticket.ticket_id}
       console.log("Edit ticket: " + newTicket.toString());
-      dispatch(createTicketsThunk(newTicket))
+      dispatch(editTicketThunk(newTicket))
       // For whatever reason after the drawer is closed these fields preserve the data that was previously entered
       setSubject("")
       setDescription("")
@@ -58,7 +57,7 @@ const EditTicketModal = ({ticket}) => {
                       }}
                     ref={firstField}
                     id='username'
-                    value={ticket.subject}
+                    defaultValue={ticket.subject}
                   />
                 </FormControl>
                   <FormErrorMessage>Both Fields Must Be Completed</FormErrorMessage>
@@ -73,7 +72,7 @@ const EditTicketModal = ({ticket}) => {
               <Box>
                 <FormControl>
                   <FormLabel htmlFor='desc'>Description</FormLabel>
-                  <Textarea value={ticket.description} onChange={(e) => {
+                  <Textarea defaultValue={ticket.description} onChange={(e) => {
                       setDescription(e.target.value);
                   }} id='desc' rows="12"/>
                 <FormErrorMessage>Both Fields Must Be Completed</FormErrorMessage>
