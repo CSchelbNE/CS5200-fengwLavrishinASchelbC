@@ -8,6 +8,7 @@ import {useNavigate} from "react-router";
 import FocalTicket from "./focal-ticket";
 import {changeFocus} from "../../redux/reducers/ticket-reducer";
 import uuid from "react-uuid";
+import LogoutHeader from "../login/logout-header";
 
 
 
@@ -32,6 +33,7 @@ const MainView = () => {
     },[]);
     return (
         <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", maxWidth: "100vw"}}>
+            <LogoutHeader user={currentUser}/>
             <CreateTicketDrawer/>
             <div className="position-absolute bottom-0 start-50 translate-middle-x">
                     <Flex direction="row" mb="2" height="75vh" width="65vw" borderWidth="2px" p="0">

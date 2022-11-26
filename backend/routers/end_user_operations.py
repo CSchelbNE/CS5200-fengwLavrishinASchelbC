@@ -6,7 +6,6 @@ from backend.database import get_db
 from sqlalchemy.engine import Engine
 from fastapi import Response, status, HTTPException, Depends
 from fastapi import APIRouter
-from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from backend.utils import hash, verify_password
 from backend.schemas import User, Credentials
 
@@ -19,6 +18,7 @@ end_user_router = APIRouter(
 
 @end_user_router.post("/add-user")
 def add_new_user(user: User, db: Engine = Depends(get_db)):
+    print(user)
     hashed_password = hash(user.password)  # hashed pw is stored in models.User.password
     conn = db.connect()
     trans = conn.begin()

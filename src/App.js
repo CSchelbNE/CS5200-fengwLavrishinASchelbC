@@ -10,7 +10,7 @@ import TechMainView from "./components/main/tech-main-view";
 
 function App() {
   return (
-    <div className="App container-fluid">
+    <div className="App container-fluid m-0 p-0">
         <BrowserRouter>
                 <Routes>
                     <Route index element={<LoginScreen/>}/>

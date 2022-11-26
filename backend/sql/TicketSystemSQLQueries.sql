@@ -91,6 +91,7 @@ CREATE PROCEDURE updateTicketProblem(IN n_subject VARCHAR(25), IN n_type VARCHAR
 		SELECT * FROM ticket NATURAL JOIN problem WHERE ticket_id = n_ticket_id;
 END $$
 DELIMITER ;
+call updateTicketProblem("hi","Software", "plzwork", 1);
 
 
 -- Admin Username: admin1 Password: abc123
@@ -99,5 +100,8 @@ INSERT INTO users (password, name, address, email, type)
     VALUES("$2b$12$CVFokaV.Cxyp1emjsAq6ZOkYMhKJwbkgW4O729c8cUlpmYJbeKr9S", "admin1", "abcd", "admin@neu.edu", "admin"),
     ("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech1", "abcd", "tech1@neu.edu", "tech");
 
-SELECT * FROM approval JOIN (SELECT * FROM ticket NATURAL JOIN problem) 
+SELECT * FROM approval;
+SELECT * FROM ticket NATURAL JOIN problem;
+SELECT * FROM users;
+SELECT * FROM approval JOIN (SELECT * FROM problem NATURAL JOIN (SELECT email, user_id, priority, date_created, ticket_id, status FROM users NATURAL JOIN ticket) AS T)  
              AS P on p.ticket_id = approval.ticket_id;
