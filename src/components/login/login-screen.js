@@ -35,7 +35,7 @@ const LoginScreen = () => {
 
     return (
             <div className="login-bg row position-relative" style={{height: "100vh"}}>
-                <Heading className="d-flex flex-row" height="fit-content" width="100vw" p="2" bg="black" fontSize="2.5rem">
+                <Heading className="d-flex flex-row" height="fit-content" width="100vw" p="3" bg="black" fontSize="1.5rem">
                     <div>Northeastern University</div>
                 </Heading>
                 <Box borderRadius="lg" boxSize="sm" borderWidth="3px" p="5" className="bg-white d-flex flex-column

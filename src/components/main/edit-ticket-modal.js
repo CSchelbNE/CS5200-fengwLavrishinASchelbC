@@ -13,6 +13,7 @@ import {Select} from "chakra-react-select";
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
 import {useDisclosure} from "@chakra-ui/react";
+import {editTicketThunk, getTicketsThunk} from "../../redux/services/tickets-thunk";
 
 
 const EditTicketModal = ({ticket}) => {
@@ -24,12 +25,11 @@ const EditTicketModal = ({ticket}) => {
     const [subject, setSubject] = useState(ticket.subject);
     const [description, setDescription] = useState(ticket.description);
     const [selectedType, setSelectedType] = useState(ticket.type);
-    console.log(subject)
     const editTicket = () => {
       const newTicket = {"subject": subject, "description": description, "user_id": ticket.user_id, "type":
-            selectedType.value, "date_created": ticket.date_created, "status": ticket.status, "priority": ticket.priority, "ticket_id": ticket.ticket_id}
-      console.log("Edit ticket: " + newTicket.toString());
-      dispatch(editTicketThunk(newTicket))
+            selectedType.value, "date_created": ticket.date_created, "status": ticket.status, "priority": ticket.priority,
+          "ticket_id": ticket.ticket_id}
+      dispatch(editTicketThunk(newTicket));
       // For whatever reason after the drawer is closed these fields preserve the data that was previously entered
       setSubject("")
       setDescription("")

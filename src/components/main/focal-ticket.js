@@ -3,8 +3,12 @@ import EditTicketModal from "./edit-ticket-modal";
 
 
 const FocalTicket = ({ticket}) => {
-    console.log(ticket)
-
+    if (ticket === null){
+        return(
+            <>
+            </>
+        )
+    }
     return(
         <div className="d-flex flex-column pt-1" style={{height: "95%", width: "95%"}}>
             <div className="d-flex justify-content-end mb-2">

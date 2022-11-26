@@ -10,6 +10,5 @@ export const createTicket = (ticket) => {
 }
 
 export const editTicket = (ticket) => {
-    console.log(ticket);
     return axios.put(URL_STRING+"edit-ticket/"+ticket.ticket_id.toString(), ticket)
 }
