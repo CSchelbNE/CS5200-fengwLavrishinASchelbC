@@ -18,12 +18,15 @@ ticket_router = APIRouter(
 def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
     return db.execute("""SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s""", user_id).all()
 
+
 @ticket_router.put("/edit-ticket/{ticket_id}")
 def edit_ticket(ticket: Ticket, ticket_id: int, db: Engine = Depends(get_db)):
-    print(ticket)
-    print(ticket_id)
-    return db.execute(f"""call updateTicketProblem(%s,%s,%s,%s)""", (str(ticket.subject), str(ticket.type),
-                                                                     str(ticket.description), str(ticket_id))).first()
+    conn = db.connect()
+    trans = conn.begin()
+    edited_ticket = db.execute(f"""call updateTicketProblem(%s,%s,%s,%s)""", (str(ticket.subject), str(ticket.type),
+                                                              str(ticket.description), str(ticket_id))).first()
+    trans.commit()
+    return edited_ticket
 
 
 @ticket_router.post("/create-ticket") # something here for if ticket == hardware: trigger
