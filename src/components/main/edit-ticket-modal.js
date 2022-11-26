@@ -10,7 +10,7 @@ import {
     ModalOverlay, Stack, Textarea
 } from "@chakra-ui/react";
 import {Select} from "chakra-react-select";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useDisclosure} from "@chakra-ui/react";
 import {editTicketThunk, getTicketsThunk} from "../../redux/services/tickets-thunk";
@@ -25,15 +25,27 @@ const EditTicketModal = ({ticket}) => {
     const dispatch = useDispatch();
     const [subject, setSubject] = useState(ticket.subject);
     const [description, setDescription] = useState(ticket.description);
-    const [selectedType, setSelectedType] = useState(ticket.type);
+    const [selectedType, setSelectedType] = useState({value: ticket.type});
+    useEffect(() => {
+        setSubject(ticket.subject);
+        setDescription(ticket.description);
+        setSelectedType(ticket.type);
+    },[isOpen]);
     const editTicket = () => {
+        ticket.callback(ticket);
+        if (subject === undefined || subject.length === 0) {
+            setSubject(ticket.subject);
+        }
+        if (description === undefined || description.length === 0) {
+            setDescription(ticket.description);
+        }
       const newTicket = {"subject": subject, "description": description, "user_id": ticket.user_id, "type":
-            selectedType.value, "date_created": ticket.date_created, "status": ticket.status, "priority": ticket.priority,
+            selectedType.value === undefined ? ticket.type : selectedType.value,
+          "date_created": ticket.date_created, "status": ticket.status, "priority": ticket.priority,
           "ticket_id": ticket.ticket_id}
+        console.log(newTicket)
       dispatch(editTicketThunk(newTicket));
       // For whatever reason after the drawer is closed these fields preserve the data that was previously entered
-      setSubject("")
-      setDescription("");
       dispatch(changeFocus(newTicket));
       onClose();
   }
@@ -67,7 +79,7 @@ const EditTicketModal = ({ticket}) => {
                <Box>
                 <FormLabel htmlFor='owner'>Problem Type</FormLabel>
                 <Select options={typeArr} value={selectedType} onChange={setSelectedType} id='type'
-                        defaultValue={ticket.type}>
+                        defaultValue={selectedType}>
                     {/*{typeArr.map((e) => <option onSelect={(e)=>{console.log()}} value={e}>{e}</option>)}*/}
                 </Select>
               </Box>

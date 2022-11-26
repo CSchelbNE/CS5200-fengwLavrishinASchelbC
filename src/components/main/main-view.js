@@ -49,7 +49,7 @@ const MainView = () => {
                                 })}
                         </Box>
                         <Box height="100%" width="80%" borderWidth="1px">
-                            <FocalTicket  ticket={focalTicket === null ? null : focalTicket}/>
+                            <FocalTicket  ticket={focalTicket === null ? null : {...focalTicket, callback: onChangeFocus}}/>
                         </Box>
                     </Flex>
             </div>

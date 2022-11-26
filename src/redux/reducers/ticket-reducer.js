@@ -12,6 +12,9 @@ const ticketSlice = createSlice({
         changeFocus(state, action){
             console.log(action.payload)
             state.focalTicket = action.payload;
+        },
+        getFocus(state,action){
+            return state.focalTicket;
         }
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
