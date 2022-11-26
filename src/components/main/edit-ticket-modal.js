@@ -14,6 +14,7 @@ import React, {useState} from "react";
 import {useDispatch} from "react-redux";
 import {useDisclosure} from "@chakra-ui/react";
 import {editTicketThunk, getTicketsThunk} from "../../redux/services/tickets-thunk";
+import {changeFocus} from "../../redux/reducers/ticket-reducer";
 
 
 const EditTicketModal = ({ticket}) => {
@@ -32,7 +33,8 @@ const EditTicketModal = ({ticket}) => {
       dispatch(editTicketThunk(newTicket));
       // For whatever reason after the drawer is closed these fields preserve the data that was previously entered
       setSubject("")
-      setDescription("")
+      setDescription("");
+      dispatch(changeFocus(newTicket));
       onClose();
   }
   return (

@@ -9,6 +9,8 @@ import FocalTicket from "./focal-ticket";
 import {changeFocus} from "../../redux/reducers/ticket-reducer";
 import uuid from "react-uuid";
 
+
+
 const MainView = () => {
     const navigation = useNavigate();
     const currentUser = useSelector(state => state.user);
@@ -47,12 +49,11 @@ const MainView = () => {
                                 })}
                         </Box>
                         <Box height="100%" width="80%" borderWidth="1px">
-                            <FocalTicket ticket={focalTicket === null ? null : focalTicket}/>
+                            <FocalTicket  ticket={focalTicket === null ? null : focalTicket}/>
                         </Box>
                     </Flex>
             </div>
         </div>
     );
 }
-
 export default MainView
