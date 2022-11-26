@@ -6,6 +6,7 @@ from backend.database import get_db
 from sqlalchemy.engine import Engine
 from fastapi import Response, status, HTTPException, Depends
 from fastapi import APIRouter
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from backend.utils import hash, verify_password
 from backend.schemas import User, Credentials
 
