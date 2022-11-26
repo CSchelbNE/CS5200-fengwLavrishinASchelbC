@@ -18,6 +18,7 @@ admin_router = APIRouter(
 def get_approvals(db: Engine = Depends(get_db)):
     return db.execute("""SELECT * FROM approvals""")
 
+
 @admin_router.put("/status-change/{approval_id}")
 def change_status(approval: Approval, approval_id: int, db: Engine = Depends(get_db)):
     conn = db.connect()
@@ -25,4 +26,3 @@ def change_status(approval: Approval, approval_id: int, db: Engine = Depends(get
     edited_approval = db.execute(f"""CALL editApprovalStatus(%s, %s)""", (int(approval_id), str(approval.status)))
     trans.commit()
     return edited_approval
-
