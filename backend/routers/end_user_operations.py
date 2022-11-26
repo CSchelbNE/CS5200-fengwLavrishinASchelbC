@@ -6,6 +6,7 @@ from backend.database import get_db
 from sqlalchemy.engine import Engine
 from fastapi import Response, status, HTTPException, Depends
 from fastapi import APIRouter
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from backend.utils import hash, verify_password
 from backend.schemas import User, Credentials
 
@@ -34,6 +35,7 @@ def get_users(db: Engine = Depends(get_db)):
 
 @end_user_router.post("/login", response_model_exclude_none=True)
 def login(credentials: Credentials, db: Engine = Depends(get_db)):
+    print(credentials)
     try:
         conn = db.connect()
         # in DB - find 1st matching username

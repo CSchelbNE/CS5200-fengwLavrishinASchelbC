@@ -25,7 +25,7 @@ import {createTicketsThunk} from "../../redux/services/tickets-thunk";
 import {useNavigate} from "react-router";
 import {useChakraSelectProps} from "chakra-react-select";
 
-function CreateTicketDrawer() {
+function CreateTicketDrawer(callback) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef();
   const currentUser = useSelector(state => state.user);
@@ -36,10 +36,10 @@ function CreateTicketDrawer() {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [selectedType, setSelectedType] = useState("");
-   const selectProps = useChakraSelectProps({
-    value: selectedType,
-    onChange: setSelectedType,
-  });
+  //  const selectProps = useChakraSelectProps({
+  //   value: selectedType,
+  //   onChange: setSelectedType,
+  // });
   const createTicket = () => {
       if (currentUser === null) {
               navigation("/")

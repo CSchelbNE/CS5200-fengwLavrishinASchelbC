@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createTicketsThunk, getTicketsThunk} from "../services/tickets-thunk";
+import {createTicketsThunk, editTicketThunk, getTicketsThunk} from "../services/tickets-thunk";
+import {useDispatch} from "react-redux";
 
 const ticketSlice = createSlice({
     name: "user",
@@ -11,6 +12,9 @@ const ticketSlice = createSlice({
         changeFocus(state, action){
             console.log(action.payload)
             state.focalTicket = action.payload;
+        },
+        getFocus(state,action){
+            return state.focalTicket;
         }
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
@@ -24,8 +28,15 @@ const ticketSlice = createSlice({
             },
         [createTicketsThunk.fulfilled]:
             (state, {payload}) => {
-                console.log(payload.data)
                 state.tickets.push(payload.data)
+            },
+        [editTicketThunk.fulfilled]:
+            (state, {payload}) => {
+                const index = state.tickets.findIndex(e => e.ticket_id === payload.data.ticket_id);
+                console.log(index);
+                const leftHalf = state.tickets.slice(0,index);
+                const rightHalf = state.tickets.slice(index+1);
+                state.tickets = [...leftHalf, payload.data, ...rightHalf];
             }
     }
     }

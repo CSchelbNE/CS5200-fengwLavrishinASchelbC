@@ -68,7 +68,7 @@ CREATE PROCEDURE createTicketWithApproval(IN n_subject VARCHAR(25), IN n_type VA
 		INSERT INTO ticket (priority,date_created,status,user_id) VALUES (n_priority, n_date_created, n_status, n_user_id);
         SET n_ticket_id = last_insert_id();
         INSERT INTO problem (subject, type,description,ticket_id) VALUES (n_subject, n_type, n_description, n_ticket_id);
-        INSERT INTO approval (status, description, type, ticket_id) VALUES ("REQUIRES APPROVAL",n_ticket_id);
+        INSERT INTO approval (status, ticket_id) VALUES ("REQUIRES APPROVAL",n_ticket_id);
         SELECT * FROM ticket NATURAL JOIN problem WHERE ticket_id = n_ticket_id;
 END $$
 DELIMITER ;
