@@ -30,3 +30,4 @@ class Approval(BaseModel):
     status: str
     description: str
     type: str
+    approval_id: Optional[int]
