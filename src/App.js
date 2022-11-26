@@ -4,7 +4,7 @@ import {Route, Routes} from "react-router"
 import {BrowserRouter} from "react-router-dom";
 import LoginScreen from "./components/login/login-screen";
 import MainView from "./components/main/main-view";
-import AdminMainView from "./components/main/admin-main-view";
+import AdminMainView from "./components/admin/admin-main-view";
 import TechMainView from "./components/main/tech-main-view";
 
 
