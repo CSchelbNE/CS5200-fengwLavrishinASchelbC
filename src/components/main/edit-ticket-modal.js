@@ -26,6 +26,7 @@ const EditTicketModal = ({ticket}) => {
     const [subject, setSubject] = useState(ticket.subject);
     const [description, setDescription] = useState(ticket.description);
     const [selectedType, setSelectedType] = useState({value: ticket.type});
+    // USED TO REFRESH UI WHEN THE MODAL IS OPENED NECESSARY TO PREVENT DEFAULT INPUT LEAKING
     useEffect(() => {
         setSubject(ticket.subject);
         setDescription(ticket.description);
@@ -39,6 +40,7 @@ const EditTicketModal = ({ticket}) => {
         if (description === undefined || description.length === 0) {
             setDescription(ticket.description);
         }
+        // THE CHAKRA SELECT COMPONENT RETURNS AN OBJECT NOT AN ATOMIC VALUE FOR SELECTEDTYPE
       const newTicket = {"subject": subject, "description": description, "user_id": ticket.user_id, "type":
             selectedType.value === undefined ? ticket.type : selectedType.value,
           "date_created": ticket.date_created, "status": ticket.status, "priority": ticket.priority,
