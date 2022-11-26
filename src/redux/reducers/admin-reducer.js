@@ -26,6 +26,9 @@ const adminSlice = createSlice({
             [getApprovalsThunk.fulfilled] :
             (state, {payload}) => {
                 state.approvals = payload.data
+                if (state.approvals.length > 0) {
+                    state.focalApproval = state.approvals[0]
+                }
             },
             [changeApprovalStatusThunk.fulfilled] :
                 (state,{payload}) => {
@@ -34,8 +37,12 @@ const adminSlice = createSlice({
                 const index = state.approvals.findIndex((e) => e.approval_id === payload.data.approval_id);
                 const leftSplice = state.approvals.slice(0, index);
                 const rightSplice = state.approvals.slice(index+1);
-                state.focalApproval = null;
                 state.approvals = [...leftSplice, ...rightSplice];
+                if (state.approvals.length > 0){
+                    state.focalApproval = state.approvals[0]
+                } else{
+                    state.focalApproval = null;
+                }
             }
         }
     }

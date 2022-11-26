@@ -30,7 +30,7 @@ const MainView = () => {
                 return;
             }
             dispatch(getTicketsThunk(currentUser.user_id))
-    },[]);
+    },[focalTicket]);
     return (
         <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", width: "98vw", maxWidth: "100vw"}}>
             <LogoutHeader user={currentUser}/>

@@ -24,12 +24,15 @@ const ticketSlice = createSlice({
     extraReducers: {
         [getTicketsThunk.fulfilled]:
             (state, {payload}) => {
-                console.log("Successfully retrieved tickets")
                 state.tickets = payload.data
+                if (state.focalTicket === null && state.tickets.length > 0){
+                    state.focalTicket = state.tickets[0];
+                }
             },
         [createTicketsThunk.fulfilled]:
             (state, {payload}) => {
                 state.tickets.push(payload.data)
+                state.focalTicket = payload.data;
             },
         [editTicketThunk.fulfilled]:
             (state, {payload}) => {
