@@ -24,6 +24,7 @@ class Ticket(BaseModel):
     date_created: str
     type: str
 
+
 class Approval(BaseModel):
     status: str
     description: str
