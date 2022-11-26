@@ -1,6 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createTicketsThunk, editTicketThunk, getTicketsThunk} from "../services/tickets-thunk";
-import {useDispatch} from "react-redux";
+import {createTicketsThunk, deleteTicketThunk, editTicketThunk, getTicketsThunk} from "../services/tickets-thunk";
 
 const ticketSlice = createSlice({
     name: "user",
@@ -41,6 +40,20 @@ const ticketSlice = createSlice({
                 const leftHalf = state.tickets.slice(0,index);
                 const rightHalf = state.tickets.slice(index+1);
                 state.tickets = [...leftHalf, payload.data, ...rightHalf];
+            },
+        [deleteTicketThunk.fulfilled]:
+        (state, {payload}) => {
+                const index = state.tickets.findIndex(e => e.ticket_id === payload.data.ticket_id);
+                console.log(index);
+                const leftHalf = state.tickets.slice(0,index);
+                const rightHalf = state.tickets.slice(index+1);
+                state.tickets = [...leftHalf, ...rightHalf];
+                 if (state.tickets.length > 0){
+                    state.focalTicket = state.tickets[0];
+                    console.log("here");
+                } else {
+                     state.focalTicket = null;
+                 }
             }
     }
     }

@@ -102,6 +102,17 @@ END $$
 DELIMITER ;
 
 
+DROP PROCEDURE IF EXISTS deleteTicket;
+DELIMITER $$
+CREATE PROCEDURE deleteTicket(IN n_ticket_id BIGINT UNSIGNED)
+	BEGIN 
+		SELECT * FROM approval RIGHT OUTER JOIN (SELECT * FROM ticket NATURAL JOIN problem WHERE status="OPEN") AS P on P.ticket_id = approval.ticket_id WHERE P.ticket_id = n_ticket_id;
+		
+END $$
+DELIMITER ;
+
+CALL deleteTIcket(2);
+
 -- Admin Username: admin1 Password: abc123
 -- Tech Username: tech1 Password: 123abc
 INSERT INTO users (password, name, address, email, type)

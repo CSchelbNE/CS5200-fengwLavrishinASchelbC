@@ -30,6 +30,15 @@ def edit_ticket(ticket: Ticket, ticket_id: int, db: Engine = Depends(get_db)):
     return edited_ticket
 
 
+@ticket_router.delete("/delete-ticket/{ticket_id}")
+def delete_ticket(ticket_id: int, db: Engine = Depends(get_db)):
+    conn = db.connect()
+    trans = conn.begin()
+    conn.execute(f"""DELETE FROM ticket WHERE ticket_id = %s""", str(ticket_id))
+    trans.commit()
+    return {"ticket_id": ticket_id}
+
+
 @ticket_router.post("/create-ticket") # something here for if ticket == hardware: trigger
 def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
     conn = db.connect()

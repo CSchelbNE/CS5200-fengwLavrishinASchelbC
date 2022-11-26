@@ -28,7 +28,7 @@ const AdminMainView = () => {
             return;
         }
         dispatch(getApprovalsThunk());
-    },[focalApproval]);
+    }, []);
 
     return (
         <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", maxWidth: "100vw"}}>

@@ -26,7 +26,7 @@ const adminSlice = createSlice({
             [getApprovalsThunk.fulfilled] :
             (state, {payload}) => {
                 state.approvals = payload.data
-                if (state.approvals.length > 0) {
+                if (state.focalApproval === null && state.approvals.length > 0) {
                     state.focalApproval = state.approvals[0]
                 }
             },
