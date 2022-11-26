@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {getApprovalsThunk} from "../services/admin-thunk";
+import {changeApprovalStatusThunk, getApprovalsThunk} from "../services/admin-thunk";
 
 const adminSlice = createSlice({
         name: "admin",
@@ -14,6 +14,9 @@ const adminSlice = createSlice({
             },
             getFocus(state,action){
                 return state.focalApproval;
+            },
+            removeFocus(state,action){
+                state.focalApproval = null;
             }
         },
         middleware: (getDefaultMiddleware) => getDefaultMiddleware({
@@ -23,10 +26,20 @@ const adminSlice = createSlice({
             [getApprovalsThunk.fulfilled] :
             (state, {payload}) => {
                 state.approvals = payload.data
+            },
+            [changeApprovalStatusThunk.fulfilled] :
+                (state,{payload}) => {
+                console.log("Changed approval pinged");
+                console.log(payload.data);
+                const index = state.approvals.findIndex((e) => e.approval_id === payload.data.approval_id);
+                const leftSplice = state.approvals.slice(0, index);
+                const rightSplice = state.approvals.slice(index+1);
+                state.focalApproval = null;
+                state.approvals = [...leftSplice, ...rightSplice];
             }
         }
     }
 );
 
-export const {changeFocusedApproval} = adminSlice.actions;
+export const {changeFocusedApproval, removeFocus} = adminSlice.actions;
 export default adminSlice.reducer

@@ -1,6 +1,13 @@
 import {Box, Button, FormControl, FormLabel} from "@chakra-ui/react";
+import {useDispatch} from "react-redux";
+import {changeApprovalStatusThunk} from "../../redux/services/admin-thunk";
 
 const FocalApproval = ({approval}) => {
+    const dispatch = useDispatch();
+    const pushApprovalStatus = (status) => {
+        dispatch(changeApprovalStatusThunk({type: approval.type, description: approval.description, status: status,
+        approval_id: approval.approval_id}));
+    }
     if (approval === null){
         return(
             <>
@@ -26,10 +33,11 @@ const FocalApproval = ({approval}) => {
                 <Box p="1" height="90%" width="inherit" borderWidth="1px">{approval.description}</Box>
             </FormControl>
             <div className="d-flex justify-content-end mt-3">
-                <Button me="2" width="100px" colorScheme="teal">
+                <Button onClick={() => pushApprovalStatus("APPROVED")} me="2" width="100px" colorScheme="teal">
                   Approve
                 </Button>
-                <Button width="100px" textColor="white" className="bg-danger">
+                <Button onClick={() => pushApprovalStatus("DENIED")} width="100px" textColor="white"
+                        className="bg-danger">
                     Deny
                 </Button>
             </div>

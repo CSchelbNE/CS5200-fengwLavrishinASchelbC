@@ -6,12 +6,6 @@
     background-image: url("../public/northeastern_univresity_seal.png");
 }
 
-.logout-hover:hover{
-    color: teal;
-    background-color: black;
-}
-
-.login-logo:focus{
-     color: teal;
-    background-color: black;
+.user-bg {
+    background-image: url("../public/studyspace.jpeg");
 }

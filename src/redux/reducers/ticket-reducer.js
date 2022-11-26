@@ -16,6 +16,7 @@ const ticketSlice = createSlice({
         getFocus(state,action){
             return state.focalTicket;
         }
+
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false
