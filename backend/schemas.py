@@ -1,9 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from pydantic.types import Optional
 
 
 class User(BaseModel):
     campus: str
-    email: str
+    email: EmailStr
     name: str
     password: str
     address: str
@@ -23,13 +24,10 @@ class Ticket(BaseModel):
     priority: str
     date_created: str
     type: str
+    ticket_id: Optional[str]
+
 
 class Approval(BaseModel):
     status: str
     description: str
     type: str
-
-
-
-
-

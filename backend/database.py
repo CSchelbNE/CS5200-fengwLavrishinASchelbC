@@ -5,6 +5,8 @@ import time
 
 REMOTE_DATABASE_URL = "mysql+pymysql://admin:cs5200finalproject@database-1.c5mdh4lrufto.us-east-2.rds.amazonaws.com" \
                       "/ticket_system"
+
+
 username = "root"
 password = "F1shg0d12345!"
 # NO SPECIAL CHARACTERS IN THE PASSWORD THAT MIGHT CONFLICT WITH THE LOCALHOST STRING PARSING (@ IS BAD)

@@ -40,9 +40,9 @@ const MainView = () => {
                             </Select>
                             {tickets.map((e) => {
                                     if (focalTicket != null && e.ticket_id === focalTicket.ticket_id) {
-                                        return <TicketListItem key={uuid()}  props={{...e, background: "#319795", callback: onChangeFocus}}/>
+                                        return <TicketListItem key={uuid()}  props={{...e, background: "#319795", textColor: "white", callback: onChangeFocus}}/>
                                     } else{
-                                        return <TicketListItem key={uuid()} props={{...e, background: "white", callback: onChangeFocus}}/>
+                                        return <TicketListItem key={uuid()} props={{...e, background: "white", textColor: "black", callback: onChangeFocus}}/>
                                     }
                                 })}
                         </Box>

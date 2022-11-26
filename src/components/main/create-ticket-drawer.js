@@ -36,10 +36,10 @@ function CreateTicketDrawer() {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [selectedType, setSelectedType] = useState("");
-   const selectProps = useChakraSelectProps({
-    value: selectedType,
-    onChange: setSelectedType,
-  });
+  //  const selectProps = useChakraSelectProps({
+  //   value: selectedType,
+  //   onChange: setSelectedType,
+  // });
   const createTicket = () => {
       if (currentUser === null) {
               navigation("/")

@@ -26,6 +26,10 @@ const ticketSlice = createSlice({
             (state, {payload}) => {
                 console.log(payload.data)
                 state.tickets.push(payload.data)
+            },
+        [editTicketsThunk.fulfilled]:
+            (state, {payload}) => {
+
             }
     }
     }

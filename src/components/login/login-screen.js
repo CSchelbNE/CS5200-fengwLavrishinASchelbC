@@ -8,10 +8,6 @@ import {useDispatch} from "react-redux";
 import {addUser} from "../../redux/reducers/user";
 import {changeFocus} from "../../redux/reducers/ticket-reducer";
 
-const Validate = (prop) => {
-    return prop === "";
-}
-
 const LoginScreen = () => {
     const URL_STRING = "http://localhost:8000/users/login";
     const [userName, setUsername] = React.useState("");
