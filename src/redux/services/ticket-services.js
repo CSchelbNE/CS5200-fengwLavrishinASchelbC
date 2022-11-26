@@ -8,3 +8,8 @@ export const getTickets = (userId) => {
 export const createTicket = (ticket) => {
     return axios.post(URL_STRING+"create-ticket", ticket)
 }
+
+export const editTicket = (ticket) => {
+    console.log(ticket);
+    return axios.put(URL_STRING+"edit-ticket/"+ticket.ticket_id.toString(), ticket)
+}

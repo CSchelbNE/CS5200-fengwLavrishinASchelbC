@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createTicketsThunk, getTicketsThunk} from "../services/tickets-thunk";
+import {createTicketsThunk, editTicketThunk, getTicketsThunk} from "../services/tickets-thunk";
 
 const ticketSlice = createSlice({
     name: "user",
@@ -27,8 +27,9 @@ const ticketSlice = createSlice({
                 console.log(payload.data)
                 state.tickets.push(payload.data)
             },
-        [editTicketsThunk.fulfilled]:
+        [editTicketThunk.fulfilled]:
             (state, {payload}) => {
+                console.log(payload)
 
             }
     }

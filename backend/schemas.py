@@ -24,7 +24,6 @@ class Ticket(BaseModel):
     priority: str
     date_created: str
     type: str
-    ticket_id: Optional[str]
 
 
 class Approval(BaseModel):

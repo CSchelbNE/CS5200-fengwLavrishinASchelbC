@@ -23,13 +23,12 @@ const EditTicketModal = ({ticket}) => {
     const typeArr = [{value: "Hardware", label: "Hardware"}, {value: "Software", label: "Software" },
         {value: "Financial Aid", label: "Financial-Aid"},{value:"Housing", label:"Housing"}, {value: "Other", label: "Other"}];
     const dispatch = useDispatch();
-    const navigation = useNavigate();
     const [subject, setSubject] = useState(ticket.subject);
     const [description, setDescription] = useState(ticket.description);
     const [selectedType, setSelectedType] = useState(ticket.type);
      const editTicket = () => {
       const newTicket = {"subject": subject, "description": description, "user_id": ticket.user_id, "type":
-            selectedType.value, "date_created": utc, "status": ticket.status, "priority": ticket.priority, "ticket_id": ticket.ticket_id}
+            selectedType.value, "date_created": ticket.date_created, "status": ticket.status, "priority": ticket.priority, "ticket_id": ticket.ticket_id}
       console.log("Edit ticket: " + newTicket.toString());
       dispatch(createTicketsThunk(newTicket))
       // For whatever reason after the drawer is closed these fields preserve the data that was previously entered
@@ -87,7 +86,7 @@ const EditTicketModal = ({ticket}) => {
             <Button colorScheme='blue' mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button variant='teal'>Submit</Button>
+            <Button onClick={editTicket} variant='teal'>Submit</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
