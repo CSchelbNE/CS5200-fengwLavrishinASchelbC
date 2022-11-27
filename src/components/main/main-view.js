@@ -8,6 +8,7 @@ import {useNavigate} from "react-router";
 import FocalTicket from "./focal-ticket";
 import {changeFocus} from "../../redux/reducers/ticket-reducer";
 import uuid from "react-uuid";
+import LogoutHeader from "../login/logout-header";
 
 
 
@@ -29,11 +30,12 @@ const MainView = () => {
                 return;
             }
             dispatch(getTicketsThunk(currentUser.user_id))
-    },[]);
+    },[focalTicket]);
     return (
-        <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", maxWidth: "100vw"}}>
+        <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", width: "98vw", maxWidth: "100vw"}}>
+            <LogoutHeader user={currentUser}/>
             <CreateTicketDrawer/>
-            <div className="position-absolute bottom-0 start-50 translate-middle-x">
+            <div className="bg-white position-absolute bottom-0 start-50 translate-middle-x">
                     <Flex direction="row" mb="2" height="75vh" width="65vw" borderWidth="2px" p="0">
                         <Box  style={{overflowY: "scroll", direction: "ltr"}} height="100%" width="20%" borderWidth="1px">
                             <Select style={{borderRadius: 0}}>

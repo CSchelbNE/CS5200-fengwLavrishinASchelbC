@@ -24,6 +24,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {createTicketsThunk} from "../../redux/services/tickets-thunk";
 import {useNavigate} from "react-router";
 import {useChakraSelectProps} from "chakra-react-select";
+import {changeFocus} from "../../redux/reducers/ticket-reducer";
 
 function CreateTicketDrawer(callback) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,6 +51,7 @@ function CreateTicketDrawer(callback) {
             selectedType.value, "date_created": utc, "status": "OPEN", "priority": "low"}
       console.log(newTicket)
       dispatch(createTicketsThunk(newTicket))
+      dispatch(changeFocus({...newTicket, background: "#319795", textColor: "white"}))
       // For whatever reason after the drawer is closed these fields preserve the data that was previously entered
       setSubject("")
       setDescription("")
