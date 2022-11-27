@@ -7,9 +7,10 @@ import {configureStore} from "@reduxjs/toolkit";
 import user from "./redux/reducers/user"
 import tickets from "./redux/reducers/ticket-reducer"
 import approvals from "./redux/reducers/admin-reducer"
+import technicianData from "./redux/reducers/technician-reducer"
 
 const store = configureStore({
-    reducer : {user: user, tickets: tickets, approvals: approvals}
+    reducer : {user: user, tickets: tickets, approvals: approvals, technicianData: technicianData}
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

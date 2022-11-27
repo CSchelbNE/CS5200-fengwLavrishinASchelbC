@@ -4,6 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 from routers.end_user_operations import end_user_router
 from routers.ticket_operations import ticket_router
 from routers.admin_operations import admin_router
+from routers.technician_operations import technician_router
 
 '''
 Big cheats:
@@ -23,6 +24,7 @@ app = FastAPI()
 app.include_router(end_user_router)
 app.include_router(ticket_router)
 app.include_router(admin_router)
+app.include_router(technician_router)
 
 # app.include_router(auth.router)
 #
