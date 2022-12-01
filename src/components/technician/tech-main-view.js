@@ -14,8 +14,10 @@ import {getOpenTicketsThunk} from "../../redux/services/technician-thunk";
 const TechnicianMainView = () => {
     const navigation = useNavigate();
     const currentUser = useSelector(state => state.user);
+    const user_id = useSelector(state => state.user.user_id);
     const openTickets = useSelector((state) => state.technicianData.openTickets);
     const focalTicket = useSelector((state) => state.technicianData.focalTicket);
+    const [assignedOrOpened, setAssignedOrOpen] = useState("open-tickets");
     const dispatch = useDispatch();
     const onChangeFocus = (ticket) => {
         dispatch(changeOpenTicketFocus(ticket))
@@ -30,6 +32,7 @@ const TechnicianMainView = () => {
         }
         dispatch(getOpenTicketsThunk())
     },[focalTicket]);
+
     return (
         <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", width: "98vw", maxWidth: "100vw"}}>
             <LogoutHeader user={currentUser}/>
@@ -49,7 +52,7 @@ const TechnicianMainView = () => {
                         })}
                     </Box>
                     <Box height="100%" width="80%" borderWidth="1px">
-                        <FocalTechTicket  ticket={focalTicket === null ? null : {...focalTicket, callback: onChangeFocus}}/>
+                        <FocalTechTicket tech_id={user_id} ticket={focalTicket === null ? null : {...focalTicket, callback: onChangeFocus}}/>
                     </Box>
                 </Flex>
             </div>

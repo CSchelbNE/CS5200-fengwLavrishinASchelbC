@@ -43,6 +43,16 @@ create table approval(
 	on update restrict on delete CASCADE
 );
 
+DROP TABLE IF EXISTS ticketAssignment;
+CREATE TABLE ticketAssignment(
+	assignment_id SERIAL PRIMARY KEY,
+	ticket_id BIGINT UNSIGNED NOT NULL,
+	tech_assigned_to BIGINT UNSIGNED,
+	FOREIGN KEY (ticket_id) REFERENCES ticket(ticket_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+	FOREIGN KEY (tech_assigned_to) REFERENCES users(user_id)
+	ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
 
 DROP PROCEDURE IF EXISTS createTicket;
 DELIMITER $$
@@ -113,8 +123,23 @@ CREATE PROCEDURE deleteTicket(IN n_ticket_id BIGINT UNSIGNED)
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS assignOpenTicket;
+DELIMITER $$
+CREATE PROCEDURE assignOpenTicket(IN n_ticket_id BIGINT UNSIGNED, IN n_technician_id BIGINT UNSIGNED)
+	BEGIN 
+		DECLARE n_assignment_id BIGINT UNSIGNED;
+		INSERT INTO ticketAssignment (ticket_id, tech_assigned_to) VALUES (n_ticket_id, n_technician_id);
+        SET n_assignment_id = last_insert_id();
+        SELECT * FROM ticketAssignment WHERE assignment_id = n_assignment_id;
+END $$
+DELIMITER ;
+
+
+
+
 -- Admin Username: admin1 Password: abc123
 -- Tech Username: tech1 Password: 123abc
 INSERT INTO users (password, name, address, email, type)
     VALUES("$2b$12$CVFokaV.Cxyp1emjsAq6ZOkYMhKJwbkgW4O729c8cUlpmYJbeKr9S", "admin1", "abcd", "admin@neu.edu", "admin"),
-    ("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech1", "abcd", "tech1@neu.edu", "tech");
+    ("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech1", "abcd", "tech1@neu.edu", "tech"), 
+     ("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech2", "abcd", "tech2@neu.edu", "tech");

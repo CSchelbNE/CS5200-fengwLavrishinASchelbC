@@ -9,3 +9,9 @@ export const getOpenTickets = () => {
 export const closeTicket = (ticket_id) => {
     return axios.put(URL_STRING+"close-ticket"+ticket_id.toString());
 }
+
+export const acceptTicket = ({ticket_id, technician_id}) => {
+    console.log(technician_id);
+    console.log(URL_STRING+"accpet-ticket/?ticket_id="+ticket_id.toString()+"&technician_id="+technician_id.toString());
+    return axios.put(URL_STRING+"accept-ticket/?ticket_id="+ticket_id.toString()+"&tech_id="+technician_id.toString());
+}

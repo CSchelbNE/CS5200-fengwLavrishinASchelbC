@@ -1,11 +1,17 @@
 import {Box, Button, FormControl, FormLabel} from "@chakra-ui/react";
 import React from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {deleteTicketThunk} from "../../redux/services/tickets-thunk";
+import {acceptOpenTicketThunk} from "../../redux/services/technician-thunk";
+import {useNavigate} from "react-router";
 
 
-const FocalTechTicket = ({ticket}) => {
+const FocalTechTicket = ({ticket, tech_id}) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    if (!tech_id){
+        navigate("/");
+    }
     if (ticket === null){
         return(
             <>
@@ -31,7 +37,7 @@ const FocalTechTicket = ({ticket}) => {
                 <Box p="1" height="90%" width="inherit" borderWidth="1px">{ticket.description}</Box>
             </FormControl>
             <div className="d-flex mt-3 justify-content-end">
-                <Button onClick={() => dispatch(deleteTicketThunk(ticket.ticket_id))} className="bg-danger text-white">Close Ticket</Button>
+                <Button onClick={() => dispatch(acceptOpenTicketThunk({ticket_id: ticket.ticket_id, technician_id: tech_id}))} className="bg-danger text-white">Accept Ticket</Button>
             </div>
         </div>
     );
