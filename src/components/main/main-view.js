@@ -1,12 +1,14 @@
 import {useDispatch, useSelector} from "react-redux";
-import {Box, Flex, Select} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
+import {Select} from "chakra-react-select";
 import CreateTicketDrawer from "./create-ticket-drawer";
 import TicketListItem from "./ticket-list-item";
 import {useEffect, useState} from "react";
 import {getTicketsThunk} from "../../redux/services/tickets-thunk";
+import {getClosedTicketsThunk} from "../../redux/services/tickets-thunk";
 import {useNavigate} from "react-router";
 import FocalTicket from "./focal-ticket";
-import {changeFocus} from "../../redux/reducers/ticket-reducer";
+import {changeFocus, changeClosedTicketFocus} from "../../redux/reducers/ticket-reducer";
 import uuid from "react-uuid";
 import LogoutHeader from "../login/logout-header";
 
@@ -14,12 +16,23 @@ import LogoutHeader from "../login/logout-header";
 
 const MainView = () => {
     const navigation = useNavigate();
+    const filterOptions = [{value: "open-tickets", label: "Open Tickets"}, {value: "closed-tickets", label: "Closed Tickets"}]
     const currentUser = useSelector(state => state.user);
     const tickets = useSelector((state) => state.tickets.tickets);
+    const closedTickets = useSelector((state) => state.tickets.closedTickets);
+    const focalClosedTicket = useSelector((state) => state.tickets.focalClosedTicket);
     const focalTicket = useSelector((state) => state.tickets.focalTicket);
+    const [openOrClosed, setOpenOrClosed] = useState( {value: "open-tickets", label: "Open Tickets"});
     const dispatch = useDispatch();
     const onChangeFocus = (ticket) => {
-        dispatch(changeFocus(ticket))
+        // dispatch(changeFocus(ticket))
+        if(openOrClosed.value === "open-tickets"){
+            console.log("open tickets");
+            dispatch(changeFocus(ticket))
+        }else {
+            console.log("closed-tickets")
+            dispatch(changeClosedTicketFocus(ticket))
+        }
     }
     useEffect(() => {
             // Currently catch if a page is refreshed and the user isn't authenticated, prevents null pointer
@@ -29,29 +42,66 @@ const MainView = () => {
                 navigation("/")
                 return;
             }
-            dispatch(getTicketsThunk(currentUser.user_id))
-    },[focalTicket]);
+            // dispatch(getTicketsThunk(currentUser.user_id))
+            console.log(openOrClosed);
+            if (openOrClosed.value === "open-tickets"){
+                dispatch(getTicketsThunk(currentUser.user_id));
+            } else {
+                dispatch(getClosedTicketsThunk(currentUser.user_id));
+            }
+    },[focalTicket, openOrClosed]);
     return (
         <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", width: "98vw", maxWidth: "100vw"}}>
             <LogoutHeader user={currentUser}/>
             <CreateTicketDrawer/>
             <div className="bg-white position-absolute bottom-0 start-50 translate-middle-x">
                     <Flex direction="row" mb="2" height="75vh" width="65vw" borderWidth="2px" p="0">
-                        <Box  style={{overflowY: "scroll", direction: "ltr"}} height="100%" width="20%" borderWidth="1px">
-                            <Select style={{borderRadius: 0}}>
-                                <option value="open-tickets">Open Tickets</option>
-                                <option value="closed-tickets">Closed Tickets</option>
+                        <Box  style={{overflowY: "scroll", direction: "ltr"}} height="100%" width="30%" minWidth="fit-content" borderWidth="1px">
+                            <Select options={filterOptions} value={openOrClosed} onChange={setOpenOrClosed} style={{borderRadius: 0}}>
                             </Select>
-                            {tickets.map((e) => {
-                                    if (focalTicket != null && e.ticket_id === focalTicket.ticket_id) {
-                                        return <TicketListItem key={uuid()}  props={{...e, background: "#319795", textColor: "white", callback: onChangeFocus}}/>
-                                    } else{
-                                        return <TicketListItem key={uuid()} props={{...e, background: "white", textColor: "black", callback: onChangeFocus}}/>
+                            {openOrClosed.value === "open-tickets" ? tickets.map((e) => {
+                                if (focalTicket != null && e.ticket_id === focalTicket.ticket_id) {
+                                return <TicketListItem key={uuid()} props={{
+                                    ...e,
+                                    background: "#319795",
+                                    callback: onChangeFocus
+                                    }}/>
+                                } else {
+                                    return <TicketListItem key={uuid()} props={{
+                                        ...e,
+                                        background: "white",
+                                        textColor: "black",
+                                        callback: onChangeFocus
+                                    }}/>
+                                }
+                            }):
+                                closedTickets.map((e) => {
+                                    if (focalClosedTicket != null && e.ticket_id === focalClosedTicket.ticket_id){
+                                        return <TicketListItem key={uuid()} props={{
+                                            ...e,
+                                            background: "#319795",
+                                            callback: onChangeFocus
+                                        }}/>
+                                    } else {
+                                        return <TicketListItem key={uuid()} props={{
+                                            ...e,
+                                            background: "white",
+                                            textColor: "black",
+                                            callback: onChangeFocus
+                                        }}/>
                                     }
-                                })}
+                                })
+                            }
                         </Box>
                         <Box height="100%" width="80%" borderWidth="1px">
-                            <FocalTicket  ticket={focalTicket === null ? null : {...focalTicket, callback: onChangeFocus}}/>
+
+                            {
+                                openOrClosed.value === "open-tickets" ?
+                                    <FocalTicket ticket={!focalTicket ?
+                                    null : {...focalTicket, callback: onChangeFocus}}/>
+                                    : <FocalTicket ticket={!focalClosedTicket ? null :
+                                        {...focalClosedTicket, callback: onChangeFocus} }/>
+                            }
                         </Box>
                     </Flex>
             </div>

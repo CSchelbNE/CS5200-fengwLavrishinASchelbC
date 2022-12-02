@@ -16,10 +16,16 @@ ticket_router = APIRouter(
 
 @ticket_router.get("/get-tickets/{user_id}")
 def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
-    return db.execute(f"""CALL selectTicketsByID(%s)""", user_id).all()
+    return db.execute(f"""CALL selectTicketsByID(%s)""", (str(user_id), )).all()
 
 
 # SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s
+
+@ticket_router.get("/get-closed-tickets/{user_id}")
+def get_users_closed_tickets(user_id: int, db: Engine = Depends(get_db)):
+    print(user_id)
+    return db.execute(f"""CALL selectClosedTicketsByID(%s)""", (str(user_id), )).all()
+
 
 @ticket_router.put("/edit-ticket/{ticket_id}")
 def edit_ticket(ticket: Ticket, ticket_id: int, db: Engine = Depends(get_db)):
