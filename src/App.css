@@ -9,3 +9,7 @@
 .user-bg {
     background-image: url("../public/studyspace.jpeg");
 }
+
+.wd-remove-focus:focus {
+    outline: none;
+}

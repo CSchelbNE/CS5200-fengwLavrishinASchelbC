@@ -23,7 +23,6 @@ def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
 
 @ticket_router.put("/edit-ticket/{ticket_id}")
 def edit_ticket(ticket: Ticket, ticket_id: int, db: Engine = Depends(get_db)):
-    print(ticket)
     conn = db.connect()
     trans = conn.begin()
     edited_ticket = db.execute(f"""call updateTicketProblem(%s,%s,%s,%s)""", (str(ticket.subject), str(ticket.type),

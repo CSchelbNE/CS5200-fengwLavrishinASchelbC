@@ -25,10 +25,8 @@ const TechnicianMainView = () => {
     const dispatch = useDispatch();
     const onChangeFocus = (ticket) => {
         if(assignedOrOpened.value ===  "open-tickets"){
-            console.log("here1");
             dispatch(changeOpenTicketFocus(ticket))
         }else {
-            console.log("here2");
             dispatch(changeOpenAssignedTicketFocus(ticket))
         }
     }
@@ -40,7 +38,6 @@ const TechnicianMainView = () => {
             navigation("/")
             return;
         }
-        console.log(assignedOrOpened);
         if (assignedOrOpened.value === "open-tickets") {
             dispatch(getOpenTicketsThunk({tech_id: currentUser.user_id}));
         } else {
@@ -54,7 +51,6 @@ const TechnicianMainView = () => {
                 navigation("/")
                 return;
             }
-            console.log(assignedOrOpened);
             if (assignedOrOpened.value === "open-tickets") {
                 dispatch(getOpenTicketsThunk({tech_id: currentUser.user_id}));
             } else {
@@ -69,7 +65,7 @@ const TechnicianMainView = () => {
             <div className="bg-white position-absolute bottom-0 start-50 translate-middle-x">
                 <Flex direction="row" mb="2" height="75vh" width="65vw" borderWidth="2px" p="0">
                     <Box  style={{overflowY: "scroll", direction: "ltr"}} height="100%" width="30%" minWidth="fit-content" borderWidth="1px">
-                        <Select  options={filterOptions} value={assignedOrOpened} onChange={setAssignedOrOpen} style={{borderRadius: 0}}>
+                        <Select boxShadow={"none"} options={filterOptions} value={assignedOrOpened} onChange={setAssignedOrOpen} style={{borderRadius: 0}}>
                         </Select>
                         {assignedOrOpened.value === "open-tickets" ? openTickets.map((e) => {
                             if (focalTicket != null && e.ticket_id === focalTicket.ticket_id) {

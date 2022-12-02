@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton, FormControl, Input, FormLabel, Select,
+  ModalCloseButton, FormControl, Input, FormLabel, Select, FormErrorMessage,
 } from '@chakra-ui/react'
 import {useDisclosure} from "@chakra-ui/react";
 import {Link} from "react-router-dom";
@@ -33,6 +33,7 @@ const SignUpModal = () => {
     "email" : email,
     "campus" : selectedCampus
   }
+  const [isValueError, setValueError] = React.useState(false);
   // Bug: Functionality could be refactored into subcomponents, for whatever reason calling the onChange callbacks
   // caused the entire map lambda generation of the <FormControl> elements to be rerendered every key press?
   return (
@@ -44,27 +45,51 @@ const SignUpModal = () => {
           <ModalHeader>Sign Up</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <FormControl mb="2">
+            <FormControl isInvalid={isValueError} mb="2">
               <FormLabel>Name: </FormLabel>
-              <Input value={name} onChange={(e) => setName(e.target.value)}/>
+              <Input value={name} onChange={(e) => {
+                if (isValueError) {
+                  setValueError(false);
+                }
+                setName(e.target.value)
+              }}/>
             </FormControl>
-            <FormControl mb="2">
+            <FormControl isInvalid={isValueError} mb="2">
               <FormLabel>Password: </FormLabel>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+              <Input type="password" value={password} onChange={(e) => {
+                  if (isValueError) {
+                    setValueError(false);
+                  }
+                  setPassword(e.target.value)}}/>
             </FormControl>
-            <FormControl mb="2">
+            <FormControl isInvalid={isValueError} mb="2">
               <FormLabel>Email: </FormLabel>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+              <Input type="email" value={email} onChange={(e) => {
+                  if (isValueError) {
+                      setValueError(false);
+                  }
+                  setEmail(e.target.value)}}/>
+              <FormErrorMessage>Must Be A Valid Email Format</FormErrorMessage>
             </FormControl>
-            <FormControl mb="2">
+            <FormControl isInvalid={isValueError} mb="2">
               <FormLabel>Address: </FormLabel>
-              <Input value={address} onChange={(e) => setAddress(e.target.value)}/>
+              <Input value={address} onChange={(e) => {
+                   if (isValueError) {
+                        setValueError(false);
+                    }
+                  setAddress(e.target.value)}}/>
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={isValueError}>
               <FormLabel>Campus:</FormLabel>
-              <Select value={selectedCampus} onChange={e => setCampus(e.target.value)} placeholder="Select a Campus">
+              <Select value={selectedCampus} onChange={e => {
+                   if (isValueError) {
+                      setValueError(false);
+                  }
+                  setCampus(e.target.value)}}
+                      placeholder="Select a Campus">
                 {campuses.map(campus => <option value={campus} key={uuid()}>{campus}</option>)}
               </Select>
+              <FormErrorMessage>All Fields Are Required</FormErrorMessage>
             </FormControl>
           </ModalBody>
           <ModalFooter>
@@ -76,7 +101,11 @@ const SignUpModal = () => {
                 axios.post(URL_STRING, new_user).then((response) => {
                         console.log(response)
                         onClose();
-                        }).catch((error => console.log(error)))}}variant='ghost'>Submit</Button>
+                        }).catch(error => {
+                          if(error.response.status === 422) {
+                            setValueError(true);
+                }})
+            }} variant='ghost'>Submit</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

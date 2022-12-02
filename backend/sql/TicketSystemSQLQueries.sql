@@ -161,14 +161,13 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS selectTicketsByID;
 DELIMITER $$
 CREATE PROCEDURE selectTicketsByID(IN n_user_id BIGINT UNSIGNED)
-	BEGIN 
-		SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, group_concat(name) as technicians
-        FROM ticket LEFT OUTER JOIN (SELECT ticket_id, name, tech_assigned_to FROM users JOIN ticketAssignment ON user_id = 
-        tech_assigned_to) AS T ON t.ticket_id = ticket.ticket_id GROUP BY ticket.ticket_id, priority, date_created, 
-        status, user_id HAVING user_id = n_user_id) as T WHERE status="OPEN" OR status="REQUIRES APPROVAL";
+    BEGIN
+        SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, group_concat(name) as technicians
+        FROM ticket LEFT OUTER JOIN (SELECT ticket_id, name, tech_assigned_to FROM users JOIN ticketAssignment ON user_id =
+        tech_assigned_to) AS T ON t.ticket_id = ticket.ticket_id GROUP BY ticket.ticket_id, priority, date_created,
+        status, user_id HAVING user_id = n_user_id) as T WHERE `status`="OPEN" OR `status`="REQUIRES APPROVAL" OR `status`="APPROVED";
 END $$
 DELIMITER ;
-CALL selectTicketsByID(4);
 
 DROP PROCEDURE IF EXISTS filterOpenTicketsByTechnician;
 DELIMITER $$
