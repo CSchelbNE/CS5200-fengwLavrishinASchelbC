@@ -17,7 +17,12 @@ const adminSlice = createSlice({
             },
             removeFocus(state,action){
                 state.focalApproval = null;
+            },
+             aLogout(state,action) {
+                state.approvals = [];
+                state.focalApproval = null;
             }
+
         },
         middleware: (getDefaultMiddleware) => getDefaultMiddleware({
             serializableCheck: false
@@ -48,5 +53,5 @@ const adminSlice = createSlice({
     }
 );
 
-export const {changeFocusedApproval, removeFocus} = adminSlice.actions;
+export const {changeFocusedApproval, removeFocus, aLogout} = adminSlice.actions;
 export default adminSlice.reducer

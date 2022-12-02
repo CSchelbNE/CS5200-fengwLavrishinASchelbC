@@ -13,8 +13,9 @@ import {
 import React from "react";
 import {useDispatch} from "react-redux";
 import {removeUser} from "../../redux/reducers/user";
-import {removeFocus} from "../../redux/reducers/admin-reducer";
+import {aLogout, removeFocus} from "../../redux/reducers/admin-reducer";
 import {useNavigate} from "react-router";
+import {teLogout} from "../../redux/reducers/technician-reducer";
 
 const LogoutHeader = ({user}) => {
     const dispatch = useDispatch();
@@ -22,6 +23,9 @@ const LogoutHeader = ({user}) => {
     const logout = () => {
         dispatch(removeUser());
         dispatch(removeFocus())
+        dispatch(aLogout());
+        dispatch(teLogout());
+        dispatch(teLogout());
         navigate("/");
     }
     if (user === null){

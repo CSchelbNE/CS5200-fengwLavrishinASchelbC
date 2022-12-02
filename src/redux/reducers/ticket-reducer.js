@@ -14,6 +14,10 @@ const ticketSlice = createSlice({
         },
         getFocus(state,action){
             return state.focalTicket;
+        },
+        tLogout(state,action) {
+            state.tickets = [];
+            state.focalTicket = null;
         }
 
     },
@@ -59,5 +63,5 @@ const ticketSlice = createSlice({
     }
 );
 
-export const {changeFocus} = ticketSlice.actions;
+export const {changeFocus, tLogout} = ticketSlice.actions;
 export default ticketSlice.reducer

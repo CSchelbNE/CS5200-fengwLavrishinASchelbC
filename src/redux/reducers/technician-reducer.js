@@ -14,7 +14,17 @@ const technicianSlice = createSlice({
         changeOpenTicketFocus(state, action) {
             console.log(action.payload)
             state.focalTicket = action.payload;
-            }
+            },
+         changeOpenAssignedTicketFocus(state,action) {
+            state.focalAssignedTicket = action.payload;
+         },
+        teLogout(state,action) {
+            state.openTickets = [];
+            state.assignedTickets = [];
+            state.focalTicket = null;
+            state.focalAssignedTicket = null;
+        }
+
         },
     extraReducers: {
         [getOpenTicketsThunk.fulfilled] :
@@ -41,11 +51,14 @@ const technicianSlice = createSlice({
             },
             [getAssignedTicketsThunk.fulfilled]:
                 (state, {payload}) => {
-                    console.log(payload);
+                    state.assignedTickets = payload.data
+                    if (state.focalAssignedTicket === null && state.assignedTickets.length > 0) {
+                        state.focalAssignedTicket = state.assignedTickets[0];
+                    }
                 }
         }
 });
 
 
-export const {changeOpenTicketFocus} = technicianSlice.actions
+export const {changeOpenTicketFocus, changeOpenAssignedTicketFocus, teLogout} = technicianSlice.actions
 export default technicianSlice.reducer

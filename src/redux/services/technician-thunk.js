@@ -12,6 +12,6 @@ export const acceptOpenTicketThunk = createAsyncThunk("/technician/accept-open-t
     })
 
 export const getAssignedTicketsThunk = createAsyncThunk("/technician/get-assigned-ticket",
-    async (technician_id) => {
-        return await getAssignedTickets(technician_id)
+    async ({tech_id}) => {
+        return await getAssignedTickets(tech_id)
     })
