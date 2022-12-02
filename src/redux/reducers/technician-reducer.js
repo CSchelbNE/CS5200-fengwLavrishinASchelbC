@@ -26,8 +26,8 @@ const technicianSlice = createSlice({
             },
                 [acceptOpenTicketThunk.fulfilled] :
                     (state, {payload}) => {
-                        console.log(payload.data)
                         const index = state.openTickets.findIndex((e) => e.ticket_id === payload.data.ticket_id);
+                        console.log(index)
                         const acceptedTicket = state.openTickets[index]
                         const leftSplice = state.openTickets.slice(0, index);
                         const rightSplice = state.openTickets.slice(index+1);

@@ -43,6 +43,8 @@ create table approval(
 	on update restrict on delete CASCADE
 );
 
+-- ticketAssignment table keeps track of the assignment of tickets to techs.
+-- All assigned & unassigned tickets are listed here.
 DROP TABLE IF EXISTS ticketAssignment;
 CREATE TABLE ticketAssignment(
 	assignment_id SERIAL PRIMARY KEY,
@@ -52,6 +54,7 @@ CREATE TABLE ticketAssignment(
 	FOREIGN KEY (tech_assigned_to) REFERENCES users(user_id)
 	ON UPDATE RESTRICT ON DELETE CASCADE
 );
+
 
 
 DROP PROCEDURE IF EXISTS createTicket;
@@ -84,6 +87,13 @@ END $$
 DELIMITER ;
 SELECT * FROM ticket;
 
+
+
+
+
+
+
+
 DROP PROCEDURE IF EXISTS updateTicketProblem;
 DELIMITER $$
 CREATE PROCEDURE updateTicketProblem(IN n_subject VARCHAR(25), IN n_type VARCHAR(64), 
@@ -102,11 +112,23 @@ CREATE PROCEDURE updateTicketProblem(IN n_subject VARCHAR(25), IN n_type VARCHAR
 END $$
 DELIMITER ;
 
+/*
 DROP PROCEDURE IF EXISTS editApprovalStatus;
 DELIMITER $$
 CREATE PROCEDURE editApprovalStatus(IN app_id BIGINT UNSIGNED, IN new_status VARCHAR(64))
     BEGIN
         UPDATE approval SET `status` = new_status WHERE approval_id = app_id;
+        SELECT * FROM approval WHERE approval_id = app_id;
+END $$
+DELIMITER ;
+*/
+
+DROP PROCEDURE IF EXISTS editApprovalStatus;
+DELIMITER $$
+CREATE PROCEDURE editApprovalStatus(IN app_id BIGINT UNSIGNED, IN new_status VARCHAR(64))
+    BEGIN        
+		UPDATE approval SET `status` = new_status WHERE approval_id = app_id;        
+		UPDATE ticket SET `status` = new_status WHERE ticket_id =(SELECT ticket_id FROM approval WHERE approval_id = app_id);
         SELECT * FROM approval WHERE approval_id = app_id;
 END $$
 DELIMITER ;
@@ -134,6 +156,8 @@ CREATE PROCEDURE assignOpenTicket(IN n_ticket_id BIGINT UNSIGNED, IN n_technicia
 END $$
 DELIMITER ;
 
+
+
 DROP PROCEDURE IF EXISTS selectTicketsByID;
 DELIMITER $$
 CREATE PROCEDURE selectTicketsByID(IN n_user_id BIGINT UNSIGNED)
@@ -141,7 +165,16 @@ CREATE PROCEDURE selectTicketsByID(IN n_user_id BIGINT UNSIGNED)
 		SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, group_concat(name) as technicians
         FROM ticket LEFT OUTER JOIN (SELECT ticket_id, name, tech_assigned_to FROM users JOIN ticketAssignment ON user_id = 
         tech_assigned_to) AS T ON t.ticket_id = ticket.ticket_id GROUP BY ticket.ticket_id, priority, date_created, 
-        status, user_id HAVING user_id = n_user_id) as T;
+        status, user_id HAVING user_id = n_user_id) as T WHERE status="OPEN" OR status="REQUIRES APPROVAL";
+END $$
+DELIMITER ;
+CALL selectTicketsByID(4);
+
+DROP PROCEDURE IF EXISTS filterOpenTicketsByTechnician;
+DELIMITER $$
+CREATE PROCEDURE filterOpenTicketsByTechnician(IN n_tech_id BIGINT UNSIGNED)
+	BEGIN 
+		SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, assignment_id, tech_assigned_to FROM ticket LEFT OUTER JOIN ticketAssignment ON ticket.ticket_id = ticketAssignment.ticket_id WHERE status="OPEN" AND (tech_assigned_to != 2 OR (select ISNULL(tech_assigned_to)))) AS T;
 END $$
 DELIMITER ;
 

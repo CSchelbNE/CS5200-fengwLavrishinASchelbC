@@ -19,7 +19,7 @@ const TechnicianMainView = () => {
     const user_id = useSelector(state => state.user.user_id);
     const openTickets = useSelector((state) => state.technicianData.openTickets);
     const focalTicket = useSelector((state) => state.technicianData.focalTicket);
-    const [assignedOrOpened, setAssignedOrOpen] = useState("open-tickets");
+    const [assignedOrOpened, setAssignedOrOpen] = useState({value: "open-tickets", label: "Open Tickets"});
     const dispatch = useDispatch();
     const onChangeFocus = (ticket) => {
         dispatch(changeOpenTicketFocus(ticket))
@@ -32,8 +32,9 @@ const TechnicianMainView = () => {
             navigation("/")
             return;
         }
+        console.log(assignedOrOpened);
         if (assignedOrOpened.value === "open-tickets") {
-            dispatch(getOpenTicketsThunk());
+            dispatch(getOpenTicketsThunk({tech_id: currentUser.user_id}));
         } else {
             dispatch(getAssignedTicketsThunk());
         }

@@ -2,8 +2,8 @@ import axios from "axios";
 
 const URL_STRING = "http://localhost:8000/tech/";
 
-export const getOpenTickets = () => {
-    return axios.get(URL_STRING+"get-open-tickets");
+export const getOpenTickets = (tech_id) => {
+    return axios.get(URL_STRING+"get-open-tickets/"+tech_id);
 }
 
 export const closeTicket = (ticket_id) => {

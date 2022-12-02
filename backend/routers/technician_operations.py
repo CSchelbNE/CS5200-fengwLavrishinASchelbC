@@ -2,7 +2,6 @@ from backend.database import get_db
 from sqlalchemy.engine import Engine
 from fastapi import Response, status, HTTPException, Depends
 from fastapi import APIRouter
-from backend.schemas import Ticket
 
 technician_router = APIRouter(
     prefix="/tech",
@@ -10,9 +9,10 @@ technician_router = APIRouter(
 )
 
 
-@technician_router.get("/get-open-tickets/")
-def get_all_open_tickets(db: Engine = Depends(get_db)):
-    return db.execute("""SELECT * FROM ticket NATURAL JOIN problem WHERE status=\"OPEN\"""").all()
+@technician_router.get("/get-open-tickets/{tech_id}")
+def get_all_open_tickets(tech_id: int, db: Engine = Depends(get_db)):
+    return db.execute("""CALL filterOpenTicketsByTechnician(%s)""", (str(tech_id))).all()
+
 
 @technician_router.put("/accept-ticket/")
 def accept_open_ticket(ticket_id: int, tech_id: int, db: Engine = Depends(get_db)):
