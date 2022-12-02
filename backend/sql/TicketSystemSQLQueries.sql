@@ -185,11 +185,11 @@ DROP PROCEDURE IF EXISTS filterAcceptedTicketsByTechnician;
 DELIMITER $$
 CREATE PROCEDURE filterAcceptedTicketsByTechnician(IN n_tech_id BIGINT UNSIGNED)
 	BEGIN 
-		SELECT * FROM ticket NATURAL JOIN (SELECT * FROM ticketAssignment WHERE tech_assigned_to = n_tech_id) AS T;
+		SELECT * FROM problem NATURAL JOIN (SELECT * FROM ticket NATURAL JOIN (SELECT * FROM ticketAssignment WHERE tech_assigned_to = n_tech_id) AS T) AS T2;
 		
 END $$
 DELIMITER ;
-
+SELECT * FROM problem NATURAL JOIN (SELECT * FROM ticket NATURAL JOIN (SELECT * FROM ticketAssignment WHERE tech_assigned_to = 2) AS T) AS T2;
 -- Admin Username: admin1 Password: abc123
 -- Tech Username: tech1 Password: 123abc
 INSERT INTO users (password, name, address, email, type)

@@ -79,7 +79,7 @@ const TechnicianMainView = () => {
                             }
                         }) :
                             assignedTickets.map((e) => {
-                                if (focalTicket != null && e.ticket_id === assignedFocalTicket.ticket_id) {
+                                if (assignedFocalTicket != null && e.ticket_id === assignedFocalTicket.ticket_id) {
                                     return <TechTicketListItem key={uuid()} props={{
                                         ...e,
                                         background: "#319795",
@@ -98,7 +98,13 @@ const TechnicianMainView = () => {
                         }
                     </Box>
                     <Box height="100%" width="80%" borderWidth="1px">
-                        <FocalTechTicket tech_id={user_id} ticket={focalTicket === null ? null : assignedOrOpened.value === "open-tickets" ? {...focalTicket, callback: onChangeFocus} : {...assignedFocalTicket, callback: onChangeFocus} }/>
+                        {
+                            assignedOrOpened.value === "open-tickets" ?
+                                <FocalTechTicket tech_id={user_id} ticket={!focalTicket ?
+                                    null : {...focalTicket, callback: onChangeFocus}}/>
+                                :   <FocalTechTicket tech_id={user_id} ticket={!assignedFocalTicket ? null :
+                                {...assignedFocalTicket, callback: onChangeFocus} }/>
+                        }
                     </Box>
                 </Flex>
             </div>
