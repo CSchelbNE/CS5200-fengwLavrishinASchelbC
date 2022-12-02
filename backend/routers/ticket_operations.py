@@ -16,7 +16,12 @@ ticket_router = APIRouter(
 
 @ticket_router.get("/get-tickets/{user_id}")
 def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
-    return db.execute("""SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s""", user_id).all()
+    # return db.execute("""SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s""", user_id).all()
+    conn = db.connect()
+    trans = conn.begin()
+    all_tickets = db.execute("""SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s""", user_id).all()
+    trans.commit()
+    return all_tickets
 
 
 @ticket_router.put("/edit-ticket/{ticket_id}")

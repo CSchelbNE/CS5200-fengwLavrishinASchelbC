@@ -46,9 +46,15 @@ function CreateTicketDrawer(callback) {
               navigation("/")
               return;
         }
+      var status;
+      if (selectedType.value === "Hardware"){
+          status = "REQUIRES APPROVAL";
+      } else{
+          status = "OPEN"
+      }
       var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
       const newTicket = {"subject": subject, "description": description, "user_id": currentUser.user_id, "type":
-            selectedType.value, "date_created": utc, "status": "OPEN", "priority": "low"}
+            selectedType.value, "date_created": utc, "status": status, "priority": "low"}
       console.log(newTicket)
       dispatch(createTicketsThunk(newTicket))
       dispatch(changeFocus({...newTicket, background: "#319795", textColor: "white"}))
