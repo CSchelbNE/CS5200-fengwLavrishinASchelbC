@@ -7,6 +7,7 @@ from fastapi import Response, status, HTTPException, Depends
 from fastapi import APIRouter
 from backend.schemas import Ticket
 
+
 ticket_router = APIRouter(
     prefix="/tickets",
     tags=['tickets']
