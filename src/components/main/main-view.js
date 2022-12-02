@@ -17,8 +17,8 @@ const MainView = () => {
     const navigation = useNavigate();
     const currentUser = useSelector(state => state.user);
     const tickets = useSelector((state) => state.tickets.tickets);
-    // const closedTickets = useSelector((state) => state.closedTickets.closedTickets);
-    // const focalClosedTicket = useSelector((state) => state.closedTickets.focalClosedTicket);
+    const closedTickets = useSelector((state) => state.tickets.closedTickets);
+    const focalClosedTicket = useSelector((state) => state.tickets.focalClosedTicket);
     const focalTicket = useSelector((state) => state.tickets.focalTicket);
     const dispatch = useDispatch();
     const onChangeFocus = (ticket) => {

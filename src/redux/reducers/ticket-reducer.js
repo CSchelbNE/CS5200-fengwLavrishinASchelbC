@@ -68,7 +68,6 @@ const ticketSlice = createSlice({
                 state.tickets = [...leftHalf, ...rightHalf];
                  if (state.tickets.length > 0){
                     state.focalTicket = state.tickets[0];
-                    console.log("here");
                 } else {
                      state.focalTicket = null;
                  }
