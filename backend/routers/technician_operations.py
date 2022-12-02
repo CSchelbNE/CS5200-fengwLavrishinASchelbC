@@ -23,6 +23,10 @@ def accept_open_ticket(ticket_id: int, tech_id: int, db: Engine = Depends(get_db
     return new_assignemnt
 
 
+@technician_router.get("/get-assigned-tickets/{tech_id}")
+def get_assigned_tickets(tech_id: int, db: Engine = Depends(get_db)):
+    return db.execute(f"""CALL filterAcceptedTicketsByTechnician(%s)""", (str(tech_id),)).all()
+
 # @technician_router.put("/close-ticket/{ticket_id}")
 # def close_ticket(ticket_id: int, db: Engine = Depends(get_db)):
 #

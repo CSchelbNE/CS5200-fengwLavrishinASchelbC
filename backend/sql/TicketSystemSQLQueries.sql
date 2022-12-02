@@ -174,7 +174,19 @@ DROP PROCEDURE IF EXISTS filterOpenTicketsByTechnician;
 DELIMITER $$
 CREATE PROCEDURE filterOpenTicketsByTechnician(IN n_tech_id BIGINT UNSIGNED)
 	BEGIN 
-		SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, assignment_id, tech_assigned_to FROM ticket LEFT OUTER JOIN ticketAssignment ON ticket.ticket_id = ticketAssignment.ticket_id WHERE status="OPEN" AND (tech_assigned_to != 2 OR (select ISNULL(tech_assigned_to)))) AS T;
+		SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, 
+        assignment_id, tech_assigned_to FROM ticket LEFT OUTER JOIN ticketAssignment ON ticket.ticket_id = 
+        ticketAssignment.ticket_id WHERE status="OPEN" AND (ticket.ticket_id NOT IN (SELECT ticket_id FROM ticketAssignment WHERE tech_assigned_to = n_tech_id) or
+        (select ISNULL(tech_assigned_to)))) AS T;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS filterAcceptedTicketsByTechnician;
+DELIMITER $$
+CREATE PROCEDURE filterAcceptedTicketsByTechnician(IN n_tech_id BIGINT UNSIGNED)
+	BEGIN 
+		SELECT * FROM ticket NATURAL JOIN (SELECT * FROM ticketAssignment WHERE tech_assigned_to = n_tech_id) AS T;
+		
 END $$
 DELIMITER ;
 

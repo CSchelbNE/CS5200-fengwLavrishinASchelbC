@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {acceptOpenTicketThunk, getOpenTicketsThunk} from "../services/technician-thunk";
+import {acceptOpenTicketThunk, getAssignedTicketsThunk, getOpenTicketsThunk} from "../services/technician-thunk";
 
 
 const technicianSlice = createSlice({
@@ -24,20 +24,24 @@ const technicianSlice = createSlice({
                     state.focalTicket = state.openTickets[0];
                 }
             },
-                [acceptOpenTicketThunk.fulfilled] :
-                    (state, {payload}) => {
-                        const index = state.openTickets.findIndex((e) => e.ticket_id === payload.data.ticket_id);
-                        console.log(index)
-                        const acceptedTicket = state.openTickets[index]
-                        const leftSplice = state.openTickets.slice(0, index);
-                        const rightSplice = state.openTickets.slice(index+1);
-                        state.assignedTickets.push(acceptedTicket);
-                        state.openTickets = [...leftSplice, ...rightSplice];
-                        if (state.openTickets.length > 0){
-                            state.focalTicket = state.openTickets[0]
-                        } else{
-                            state.focalTicket = null;
-                        }
+            [acceptOpenTicketThunk.fulfilled] :
+                (state, {payload}) => {
+                    const index = state.openTickets.findIndex((e) => e.ticket_id === payload.data.ticket_id);
+                    console.log(index)
+                    const acceptedTicket = state.openTickets[index]
+                    const leftSplice = state.openTickets.slice(0, index);
+                    const rightSplice = state.openTickets.slice(index+1);
+                    state.assignedTickets.push(acceptedTicket);
+                    state.openTickets = [...leftSplice, ...rightSplice];
+                    if (state.openTickets.length > 0){
+                        state.focalTicket = state.openTickets[0]
+                    } else{
+                        state.focalTicket = null;
+                    }
+            },
+            [getAssignedTicketsThunk.fulfilled]:
+                (state, {payload}) => {
+                    console.log(payload);
                 }
         }
 });
