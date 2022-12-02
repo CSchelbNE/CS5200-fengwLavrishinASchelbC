@@ -4,6 +4,10 @@ export const getTickets = (userId) => {
     return axios.get(URL_STRING +"get-tickets/"+ userId);
 }
 
+export const getClosedTickets = (userId) => {
+    return axios.get(URL_STRING + "get-closed-tickets/"+userId);
+}
+
 export const createTicket = (ticket) => {
     return axios.post(URL_STRING+"create-ticket", ticket)
 }

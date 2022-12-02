@@ -4,6 +4,7 @@ import CreateTicketDrawer from "./create-ticket-drawer";
 import TicketListItem from "./ticket-list-item";
 import {useEffect, useState} from "react";
 import {getTicketsThunk} from "../../redux/services/tickets-thunk";
+import {getClosedTicketsThunk} from "../../redux/services/tickets-thunk";
 import {useNavigate} from "react-router";
 import FocalTicket from "./focal-ticket";
 import {changeFocus} from "../../redux/reducers/ticket-reducer";
@@ -16,6 +17,8 @@ const MainView = () => {
     const navigation = useNavigate();
     const currentUser = useSelector(state => state.user);
     const tickets = useSelector((state) => state.tickets.tickets);
+    // const closedTickets = useSelector((state) => state.closedTickets.closedTickets);
+    // const focalClosedTicket = useSelector((state) => state.closedTickets.focalClosedTicket);
     const focalTicket = useSelector((state) => state.tickets.focalTicket);
     const dispatch = useDispatch();
     const onChangeFocus = (ticket) => {
