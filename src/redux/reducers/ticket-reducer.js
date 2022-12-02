@@ -77,5 +77,5 @@ const ticketSlice = createSlice({
     }
 );
 
-export const {changeFocus, tLogout} = ticketSlice.actions;
+export const {changeFocus, changeClosedTicketFocus, tLogout} = ticketSlice.actions;
 export default ticketSlice.reducer
