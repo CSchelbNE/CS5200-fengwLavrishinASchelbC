@@ -9,6 +9,7 @@ import uuid from "react-uuid";
 import LogoutHeader from "../login/logout-header";
 import FocalTechTicket from "./focal-tech-ticket";
 import {getAssignedTicketsThunk, getOpenTicketsThunk} from "../../redux/services/technician-thunk";
+import FocalAssignedTicket from "./focal-assigned-ticket";
 
 
 
@@ -102,7 +103,7 @@ const TechnicianMainView = () => {
                             assignedOrOpened.value === "open-tickets" ?
                                 <FocalTechTicket tech_id={user_id} ticket={!focalTicket ?
                                     null : {...focalTicket, callback: onChangeFocus}}/>
-                                :   <FocalTechTicket tech_id={user_id} ticket={!assignedFocalTicket ? null :
+                                :   <FocalAssignedTicket tech_id={user_id} ticket={!assignedFocalTicket ? null :
                                 {...assignedFocalTicket, callback: onChangeFocus} }/>
                         }
                     </Box>

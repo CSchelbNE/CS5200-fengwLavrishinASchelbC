@@ -13,6 +13,7 @@ const FocalTicket = ({ticket}) => {
             </>
         )
     }
+    const deleteButton = ticket.status === "CLOSED" ? "d-none" : "bg-danger text-white";
     return(
         <div className="d-flex flex-column pt-1" style={{height: "95%", width: "95%"}}>
             <div className="d-flex justify-content-end mb-2">
@@ -35,7 +36,7 @@ const FocalTicket = ({ticket}) => {
                 <Box p="1" height="90%" width="inherit" borderWidth="1px">{ticket.description}</Box>
             </FormControl>
             <div className="d-flex mt-3 justify-content-end">
-                <Button onClick={() => dispatch(deleteTicketThunk(ticket.ticket_id))} className="bg-danger text-white">Delete</Button>
+                <Button onClick={() => dispatch(deleteTicketThunk(ticket.ticket_id))} className={deleteButton}>Delete</Button>
             </div>
         </div>
     );

@@ -20,6 +20,7 @@ import {changeFocus} from "../../redux/reducers/ticket-reducer";
 const EditTicketModal = ({ticket}) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const firstField = React.useRef();
+    const editButton = ticket.status === "CLOSED" ? "d-none" : "text-white";
     const typeArr = [{value: "Hardware", label: "Hardware"}, {value: "Software", label: "Software" },
         {value: "Financial Aid", label: "Financial-Aid"},{value:"Housing", label:"Housing"}, {value: "Other", label: "Other"}];
     const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const EditTicketModal = ({ticket}) => {
   }
   return (
     <>
-      <Button mt="1" colorScheme="gray" onClick={onOpen}>Edit</Button>
+      <Button mt="1" className={editButton} colorScheme="gray" onClick={onOpen}>Edit</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

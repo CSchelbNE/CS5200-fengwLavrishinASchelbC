@@ -1,5 +1,10 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {acceptOpenTicketThunk, getAssignedTicketsThunk, getOpenTicketsThunk} from "../services/technician-thunk";
+import {
+    acceptOpenTicketThunk,
+    closeTicketThunk,
+    getAssignedTicketsThunk,
+    getOpenTicketsThunk
+} from "../services/technician-thunk";
 
 
 const technicianSlice = createSlice({
@@ -54,6 +59,19 @@ const technicianSlice = createSlice({
                     state.assignedTickets = payload.data
                     if (state.focalAssignedTicket === null && state.assignedTickets.length > 0) {
                         state.focalAssignedTicket = state.assignedTickets[0];
+                    }
+                },
+            [closeTicketThunk.fulfilled]:
+                (state, {payload}) => {
+                    console.log(payload.data)
+                    const index = state.assignedTickets.findIndex((e) => e.ticket_id === payload.data.ticket_id);
+                    const leftSplice = state.assignedTickets.slice(0, index);
+                    const rightSplice = state.assignedTickets.slice(index+1);
+                    state.assignedTickets = [...leftSplice, ...rightSplice];
+                    if (state.assignedTickets.length > 0){
+                        state.focalAssignedTicket = state.assignedTickets[0]
+                    } else{
+                        state.focalAssignedTicket = null;
                     }
                 }
         }
