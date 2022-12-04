@@ -1,7 +1,6 @@
 import {
   Avatar,
   AvatarBadge,
-  Button,
   Center,
   Heading,
   Menu,
@@ -65,9 +64,13 @@ const LogoutHeader = ({user}) => {
               </MenuList>
             </Menu>
             </div>
+            <div className="wd-absolute">
+                {window.location.href.split("/").slice(-1)[0] === "main" ? "User Panel" : window.location.href.split("/").slice(-1)[0] === "admin" ? "Admin Panel" : "Tech Panel" }
+            </div>
         </Heading>
     );
 }
+
 
 
 export default LogoutHeader

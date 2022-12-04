@@ -15,9 +15,10 @@ import FocalAssignedTicket from "./focal-assigned-ticket";
 
 const TechnicianMainView = () => {
     const navigation = useNavigate();
-    const filterOptions = [{value: "open-tickets", label: "Open Tickets"}, {value: "accepted-tickets", label: "Accepted Tickets"}];
+    const filterOptions = [{value: "open-tickets", label: "Open Tickets"}, {value: "accepted-tickets",
+        label: "Accepted Tickets"}];
     const currentUser = useSelector(state => state.user);
-    const user_id = useSelector(state => state.user.user_id);
+    // const user_id = useSelector(state => state.user.user_id);
     const openTickets = useSelector((state) => state.technicianData.openTickets);
     const assignedTickets = useSelector(state => state.technicianData.assignedTickets);
     const focalTicket = useSelector((state) => state.technicianData.focalTicket);
@@ -59,7 +60,9 @@ const TechnicianMainView = () => {
             }
         }
     , [assignedOrOpened]);
-
+    if(!currentUser) {
+        return <></>
+    }
     return (
         <div className="login-bg position-relative p-0" style={{height: "100vh",maxHeight: "100vh", width: "100vw", maxWidth: "100vw"}}>
             <LogoutHeader user={currentUser}/>
@@ -97,9 +100,9 @@ const TechnicianMainView = () => {
                     <Box height="100%" width="80%" borderWidth="1px">
                         {
                             assignedOrOpened.value === "open-tickets" ?
-                                <FocalTechTicket tech_id={user_id} ticket={!focalTicket ?
+                                <FocalTechTicket tech_id={currentUser.user_id} ticket={!focalTicket ?
                                     null : {...focalTicket, callback: onChangeFocus}}/>
-                                :   <FocalAssignedTicket tech_id={user_id} ticket={!assignedFocalTicket ? null :
+                                :   <FocalAssignedTicket tech_id={currentUser.user_id} ticket={!assignedFocalTicket ? null :
                                 {...assignedFocalTicket, callback: onChangeFocus} }/>
                         }
                     </Box>

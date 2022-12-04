@@ -27,6 +27,9 @@ const EditTicketModal = ({ticket}) => {
     const [subject, setSubject] = useState(ticket.subject);
     const [description, setDescription] = useState(ticket.description);
     const [selectedType, setSelectedType] = useState({value: ticket.type});
+    const [subjectErr, setSubjectErr] = useState(false);
+    const [typeErr, setTypeErr] = useState(false);
+    const [descErr, setDescErr] = useState(false);
     // USED TO REFRESH UI WHEN THE MODAL IS OPENED NECESSARY TO PREVENT DEFAULT INPUT LEAKING
     useEffect(() => {
         setSubject(ticket.subject);
@@ -35,12 +38,18 @@ const EditTicketModal = ({ticket}) => {
     },[isOpen]);
     const editTicket = () => {
         ticket.callback(ticket);
-        if (subject === undefined || subject.length === 0) {
-            setSubject(ticket.subject);
-        }
-        if (description === undefined || description.length === 0) {
-            setDescription(ticket.description);
-        }
+        if (!subject || !description || !selectedType) {
+          if(!subject) setSubjectErr(true);
+          if(!description) setDescErr(true);
+          if(!selectedType) setTypeErr(true);
+          return;
+      }
+        // if (subject === undefined || subject.length === 0) {
+        //     setSubject(ticket.subject);
+        // }
+        // if (description === undefined || description.length === 0) {
+        //     setDescription(ticket.description);
+        // }
         // THE CHAKRA SELECT COMPONENT RETURNS AN OBJECT NOT AN ATOMIC VALUE FOR SELECTEDTYPE
       const newTicket = {"subject": subject, "description": description, "user_id": ticket.user_id, "type":
             selectedType.value === undefined ? ticket.type : selectedType.value,
@@ -66,33 +75,39 @@ const EditTicketModal = ({ticket}) => {
           <ModalBody>
              <Stack spacing='24px'>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={subjectErr}>
                   <FormLabel htmlFor='username'>Subject</FormLabel>
                   <Input
                       onChange={(e) => {
+                          if (subjectErr) setSubjectErr(false);
+                          if (typeErr) setTypeErr(false);
                           setSubject(e.target.value)
                       }}
                     ref={firstField}
                     id='username'
                     defaultValue={ticket.subject}
                   />
+                <FormErrorMessage>Subject cannot be null</FormErrorMessage>
                 </FormControl>
-                  <FormErrorMessage>Both Fields Must Be Completed</FormErrorMessage>
               </Box>
-               <Box>
-                <FormLabel htmlFor='owner'>Problem Type</FormLabel>
-                <Select options={typeArr} value={selectedType} onChange={setSelectedType} id='type'
-                        defaultValue={selectedType}>
-                    {/*{typeArr.map((e) => <option onSelect={(e)=>{console.log()}} value={e}>{e}</option>)}*/}
-                </Select>
-              </Box>
+                 <FormControl isInvalid={typeErr}>
+                       <Box>
+                        <FormLabel htmlFor='owner'>Problem Type</FormLabel>
+                        <Select options={typeArr} value={selectedType} onChange={setSelectedType} id='type'
+                                defaultValue={selectedType}>
+                            {/*{typeArr.map((e) => <option onSelect={(e)=>{console.log()}} value={e}>{e}</option>)}*/}
+                        </Select>
+                      </Box>
+                 </FormControl>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={descErr}>
                   <FormLabel htmlFor='desc'>Description</FormLabel>
                   <Textarea defaultValue={ticket.description} onChange={(e) => {
+                      if (descErr) setDescErr(false);
+                      if (typeErr) setTypeErr(false);
                       setDescription(e.target.value);
                   }} id='desc' rows="12"/>
-                <FormErrorMessage>Both Fields Must Be Completed</FormErrorMessage>
+                <FormErrorMessage>Description cannot be null</FormErrorMessage>
                 </FormControl>
               </Box>
             </Stack>

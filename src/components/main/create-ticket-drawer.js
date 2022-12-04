@@ -10,9 +10,6 @@ import {
   FormLabel,
   Box,
   Input,
-  InputGroup,
-  InputLeftAddon,
-  InputRightAddon,
   Textarea,
   Button, FormControl, FormErrorMessage,
 } from '@chakra-ui/react'
@@ -23,10 +20,10 @@ import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {createTicketsThunk} from "../../redux/services/tickets-thunk";
 import {useNavigate} from "react-router";
-import {useChakraSelectProps} from "chakra-react-select";
 import {changeFocus} from "../../redux/reducers/ticket-reducer";
 
-function CreateTicketDrawer(callback) {
+
+function CreateTicketDrawer() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef();
   const currentUser = useSelector(state => state.user);
@@ -37,26 +34,32 @@ function CreateTicketDrawer(callback) {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [selectedType, setSelectedType] = useState("");
+  const [subjectErr, setSubjectErr] = useState(false);
+  const [descErr, setDescErr] = useState(false);
+  const [typeErr, setTypeErr] = useState(false);
   const createTicket = () => {
       if (currentUser === null) {
               navigation("/")
               return;
         }
-      var status;
-      if (selectedType.value === "Hardware"){
-          status = "REQUIRES APPROVAL";
-      } else{
-          status = "OPEN"
+      if (!subject || !description || !selectedType) {
+          if(!subject) setSubjectErr(true);
+          if(!description) setDescErr(true);
+          if(!selectedType) setTypeErr(true);
+          return;
       }
       var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
       const newTicket = {"subject": subject, "description": description, "user_id": currentUser.user_id, "type":
-            selectedType.value, "date_created": utc, "status": status, "priority": "low"}
-      console.log(newTicket)
+            selectedType.value, "date_created": utc, "status": selectedType.value === "Hardware" ? "REQUIRES APPROVAL" : "OPEN", "priority": "low"}
       dispatch(createTicketsThunk(newTicket))
       dispatch(changeFocus({...newTicket, background: "#319795", textColor: "white"}))
       // For whatever reason after the drawer is closed these fields preserve the data that was previously entered
       setSubject("")
       setDescription("")
+      setSelectedType("");
+      setTypeErr(false);
+      setDescErr(false);
+      setSubjectErr(false);
       onClose();
   }
   return (
@@ -68,7 +71,15 @@ function CreateTicketDrawer(callback) {
         isOpen={isOpen}
         placement='left'
         initialFocusRef={firstField}
-        onClose={onClose}
+        // Prevent state leaking when the user inputs something closes the drawer and reopens it
+        onClose={() => {
+            setSubject("")
+            setDescription("")
+            setSelectedType("");
+            setTypeErr(false);
+            setDescErr(false);
+            setSubjectErr(false);
+            onClose()}}
       >
         <DrawerOverlay />
         <DrawerContent>
@@ -80,39 +91,47 @@ function CreateTicketDrawer(callback) {
           <DrawerBody>
             <Stack spacing='24px'>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={subjectErr}>
                   <FormLabel htmlFor='username'>Subject</FormLabel>
                   <Input
                       onChange={(e) => {
+                          if (subjectErr) setSubjectErr(false);
+                          if(typeErr) setTypeErr(false);
                           setSubject(e.target.value)
                       }}
                     ref={firstField}
                     id='username'
                     placeholder='Please enter a subject'
                   />
+                    <FormErrorMessage>Subject cannot be null</FormErrorMessage>
                 </FormControl>
-                  <FormErrorMessage>Both Fields Must Be Completed</FormErrorMessage>
               </Box>
                <Box>
-                <FormLabel htmlFor='owner'>Problem Type</FormLabel>
-                <Select options={typeArr} value={selectedType} onChange={setSelectedType} id='type' defaultValue='Select type...'>
-                    {/*{typeArr.map((e) => <option onSelect={(e)=>{console.log()}} value={e}>{e}</option>)}*/}
-                </Select>
+                   <FormControl isInvalid={typeErr}>
+                        <FormLabel htmlFor='owner'>Problem Type</FormLabel>
+                        <Select options={typeArr} value={selectedType} onChange={setSelectedType} id='type' defaultValue='Select type...'>
+                        </Select>
+                       <FormErrorMessage>Problem type cannot be null</FormErrorMessage>
+                   </FormControl>
               </Box>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={descErr}>
                   <FormLabel htmlFor='desc'>Description</FormLabel>
-                  <Textarea onChange={(e) => {
+                  <Textarea placeholder={"Please enter a brief description of your problem..."} onChange={(e) => {
+                      if (descErr) setDescErr(false);
+                      if (typeErr) setTypeErr(false);
                       setDescription(e.target.value);
                   }} id='desc' rows="15"/>
-                <FormErrorMessage>Both Fields Must Be Completed</FormErrorMessage>
+                    <FormErrorMessage>Description cannot be null</FormErrorMessage>
                 </FormControl>
               </Box>
             </Stack>
           </DrawerBody>
 
           <DrawerFooter borderTopWidth='1px'>
-            <Button variant='outline' mr={3} onClick={onClose}>
+            <Button variant='outline' mr={3} onClick={() => {
+
+                onClose()}}>
               Cancel
             </Button>
             <Button colorScheme='blue' onClick={createTicket}>Submit</Button>

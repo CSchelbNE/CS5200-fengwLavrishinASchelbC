@@ -31,6 +31,9 @@ const technicianSlice = createSlice({
         }
 
         },
+        middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+            serializableCheck: false
+        }),
     extraReducers: {
         [getOpenTicketsThunk.fulfilled] :
             (state, {payload}) => {

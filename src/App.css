@@ -19,7 +19,8 @@
 }
 
 .wd-absolute {
+    font-size: 2.25rem;
     position: absolute;
-    top: 0;
-    right: 200px;
+    top: 8px;
+    left: 75px;
 }

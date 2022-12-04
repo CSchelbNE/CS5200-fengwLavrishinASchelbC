@@ -38,7 +38,11 @@ const CreateCommentModal = ({tech_id, ticket_id}) => {
         <>
             <Button mt="1" colorScheme="telegram" onClick={onOpen}>Create Comment</Button>
 
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpen} onClose={() => {
+                setInputError(false);
+                setComment("");
+                onClose();
+            }}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>
@@ -60,9 +64,11 @@ const CreateCommentModal = ({tech_id, ticket_id}) => {
                                         id='username'
                                         rows="8"
                                         defaultValue={""}
+                                        placeholder={"Please enter a comment..."}
                                     />
+                                <FormErrorMessage>Comment cannot be null</FormErrorMessage>
                                 </FormControl>
-                                <FormErrorMessage>Please Enter A Comment</FormErrorMessage>
+
                         </Stack>
                     </ModalBody>
 
