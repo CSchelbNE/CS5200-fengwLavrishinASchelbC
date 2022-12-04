@@ -64,10 +64,10 @@ const TechnicianMainView = () => {
         return <></>
     }
     return (
-        <div className="login-bg position-relative p-0" style={{height: "100vh",maxHeight: "100vh", width: "100vw", maxWidth: "100vw"}}>
+        <div className="login-bg position-relative p-0 " style={{height: "100vh",maxHeight: "100vh", width: "100vw", maxWidth: "100vw"}}>
             <LogoutHeader user={currentUser}/>
-            <div className="bg-white position-absolute bottom-0 start-50 translate-middle-x">
-                <Flex direction="row" mb="2" height="75vh" width="65vw" borderWidth="2px" p="0">
+            <div  className="mb-4 bg-white position-absolute bottom-0 start-50 translate-middle-x">
+                <Flex direction="row" height="75vh" width="65vw" borderWidth="2px" p="0">
                     <Box  style={{overflowY: "scroll", direction: "ltr"}} height="100%" width="30%" minWidth="fit-content" borderWidth="1px">
                         <Select boxShadow={"none"} options={filterOptions} value={assignedOrOpened} onChange={setAssignedOrOpen} style={{borderRadius: 0}}>
                         </Select>

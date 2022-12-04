@@ -35,8 +35,8 @@ const AdminMainView = () => {
             <div className="position-absolute top-0 start-0 p-0">
                 <LogoutHeader user={currentUser}/>
             </div>
-            <div className="position-absolute bottom-0 start-50 bg-white translate-middle-x">
-                <Flex direction="row" mb="2" height="75vh" width="65vw" borderWidth="2px" p="0">
+            <div className="mb-4 position-absolute bottom-0 start-50 bg-white translate-middle-x">
+                <Flex direction="row" height="75vh" width="65vw" borderWidth="2px" p="0">
                     <Box  style={{overflowY: "scroll", direction: "ltr"}} height="100%" minWidth="fit-content" borderWidth="1px">
                         <div className="p-3" style={{borderRadius: 0, borderBottom: "1px solid gray"}}>
                             {/*<option value="open-tickets">Open Approvals</option>*/}
