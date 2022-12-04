@@ -20,13 +20,17 @@ const CreateCommentModal = ({tech_id, ticket_id}) => {
     const firstField = React.useRef();
     const dispatch = useDispatch();
     const [comment, setComment] = useState("");
+    const [inputError, setInputError] = useState(false);
     // USED TO REFRESH UI WHEN THE MODAL IS OPENED NECESSARY TO PREVENT DEFAULT INPUT LEAKING
     useEffect(() => {
         setComment("");
     },[isOpen]);
     const submitComment = () => {
+        if (!comment) {
+            setInputError(true)
+            return;
+        }
         const newComment = {"tech_id": tech_id, "ticket_id": ticket_id, "comment_body": comment};
-        console.log(newComment)
         dispatch(createCommentThunk(newComment));
         onClose();
     }
@@ -43,11 +47,13 @@ const CreateCommentModal = ({tech_id, ticket_id}) => {
                     <ModalCloseButton />
                     <ModalBody>
                         <Stack spacing='24px'>
-                            <Box>
-                                <FormControl>
+                                <FormControl isInvalid={inputError}>
                                     <FormLabel htmlFor='username'>Body</FormLabel>
                                     <Textarea
                                         onChange={(e) => {
+                                            if (inputError) {
+                                                setInputError(false);
+                                            }
                                             setComment(e.target.value)
                                         }}
                                         ref={firstField}
@@ -57,7 +63,6 @@ const CreateCommentModal = ({tech_id, ticket_id}) => {
                                     />
                                 </FormControl>
                                 <FormErrorMessage>Please Enter A Comment</FormErrorMessage>
-                            </Box>
                         </Stack>
                     </ModalBody>
 

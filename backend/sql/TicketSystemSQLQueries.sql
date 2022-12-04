@@ -2,15 +2,39 @@ DROP DATABASE IF EXISTS ticket_system;
 CREATE DATABASE ticket_system;
 USE ticket_system;
 
+
+
+DROP TABLE IF EXISTS campus;
+create table campus (
+	campus_id SERIAL PRIMARY KEY,
+    location ENUM("Boston","Burlington","Charlotte","London","Nahant",
+    "Portland","San Francisco | Bay Area", "Seattle", "Toronto") NOT NULL
+);
+
+INSERT INTO campus (location) value ("Boston");
+INSERT INTO campus (location) value ("Burlington");
+INSERT INTO campus (location) value ("Charlotte");
+INSERT INTO campus (location) value ("London");
+INSERT INTO campus (location) value ("Nahant");
+INSERT INTO campus (location) value ("Portland");
+INSERT INTO campus (location) value ("San Francisco | Bay Area");
+INSERT INTO campus (location) value ("Seattle");
+INSERT INTO campus (location) value ("Toronto");
+
+
 DROP TABLE IF EXISTS users;
 create table users(
 	user_id SERIAL primary key,
-	password char(64) not null,
+	password VARCHAR(64) not null,
     type VARCHAR(10) not null,
 	name varchar(64) NOT NULL UNIQUE,
-	address varchar(64) not null,
-	email varchar(64) not null UNIQUE
+	address varchar(128) not null,
+	email varchar(64) not null UNIQUE,
+    campus BIGINT UNSIGNED NOT NULL,
+    CONSTRAINT campus_fk1 foreign key(campus) references campus(campus_id)
+		on update restrict on delete restrict
 );
+
 
 DROP TABLE IF EXISTS ticket;
 create table ticket(
@@ -76,7 +100,7 @@ CREATE TABLE surveyAssignemnt (
         user_id BIGINT UNSIGNED,
         survey_id BIGINT UNSIGNED,
 		FOREIGN KEY (ticket_id) REFERENCES ticket(ticket_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
-		FOREIGN KEY (user_id) REFERENCES user(user_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+		FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE RESTRICT ON DELETE CASCADE,
 		FOREIGN KEY (survey_id) REFERENCEs survey(survey_id) ON UPDATE RESTRICT ON DELETE RESTRICT	
 );
 
@@ -103,8 +127,11 @@ CREATE PROCEDURE fillOutSurvey(IN n_survey_body VARCHAR(255), IN n_ticket_id BIG
         INSERT INTO surveyAssignemnt (ticket_id, user_id, survey_id) VALUES (n_ticket_id, n_user_id, n_survey_id);
         SELECT * FROM survey WHERE n_survey_id;
 END $$
+DELIMITER ;
 
 
+
+SELECT * FROM survey;
 DROP PROCEDURE IF EXISTS createComment;
 DELIMITER $$
 CREATE PROCEDURE createComment(IN n_comment_body VARCHAR(255), IN n_ticket_id BIGINT UNSIGNED,
@@ -117,6 +144,23 @@ CREATE PROCEDURE createComment(IN n_comment_body VARCHAR(255), IN n_ticket_id BI
         SELECT * FROM comment WHERE comment_id = n_comment_id;
 END $$
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS createUser;
+DELIMITER $$
+CREATE PROCEDURE createUser(IN n_password VARCHAR(64), IN n_type VARCHAR(10), 
+		IN n_name VARCHAR(64), IN n_address VARCHAR(128), IN n_email VARCHAR(64), IN n_campus VARCHAR(64))
+	BEGIN
+		declare n_campus_id BIGINT UNSIGNED;
+        declare n_user_id BIGINT UNSIGNED;
+		SET n_campus_id = (SELECT campus_id FROM campus WHERE location=n_campus);
+        INSERT INTO users (password, type, name, address, email, campus) VALUES (n_password, 
+			n_type, n_name, n_address, n_email, n_campus_id);
+		SET n_user_id = last_insert_id();
+        SELECT * FROM users WHERE user_id = n_user_id;
+END $$
+DELIMITER ;
+
 
 DROP PROCEDURE IF EXISTS getCommentsByID;
 DELIMITER $$
@@ -238,7 +282,7 @@ CREATE PROCEDURE selectTicketsByID(IN n_user_id BIGINT UNSIGNED)
         status, user_id HAVING user_id = n_user_id) as T WHERE status="OPEN" OR status="REQUIRES APPROVAL";
 END $$
 DELIMITER ;
-CALL selectTicketsByID(4);
+
 
 DROP PROCEDURE IF EXISTS filterOpenTicketsByTechnician;
 DELIMITER $$
@@ -246,7 +290,7 @@ CREATE PROCEDURE filterOpenTicketsByTechnician(IN n_tech_id BIGINT UNSIGNED)
 	BEGIN 
 		SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, 
         assignment_id, tech_assigned_to FROM ticket LEFT OUTER JOIN ticketAssignment ON ticket.ticket_id = 
-        ticketAssignment.ticket_id WHERE status="OPEN" AND (ticket.ticket_id NOT IN (SELECT ticket_id FROM ticketAssignment WHERE tech_assigned_to = n_tech_id) or
+        ticketAssignment.ticket_id WHERE (status="OPEN" OR STATUS="APPROVED") AND (ticket.ticket_id NOT IN (SELECT ticket_id FROM ticketAssignment WHERE tech_assigned_to = n_tech_id) or
         (select ISNULL(tech_assigned_to)))) AS T;
 END $$
 DELIMITER ;
@@ -255,11 +299,13 @@ DROP PROCEDURE IF EXISTS filterAcceptedTicketsByTechnician;
 DELIMITER $$
 CREATE PROCEDURE filterAcceptedTicketsByTechnician(IN n_tech_id BIGINT UNSIGNED)
 	BEGIN 
-		SELECT * FROM problem NATURAL JOIN (SELECT * FROM ticket NATURAL JOIN (SELECT * FROM ticketAssignment WHERE tech_assigned_to = n_tech_id) AS T) AS T2;
+		SELECT * FROM problem NATURAL JOIN 
+        (SELECT * FROM ticket NATURAL JOIN (SELECT * FROM ticketAssignment WHERE tech_assigned_to 
+        = n_tech_id) AS T WHERE ticket.status != "CLOSED") AS T2;
 		
 END $$
 DELIMITER ;
-
+SELECT * FROM ticket;
 DROP PROCEDURE IF EXISTS selectClosedTicketsByID;
 DELIMITER $$
 CREATE PROCEDURE selectClosedTicketsByID(IN n_user_id BIGINT UNSIGNED)
@@ -277,11 +323,11 @@ CREATE PROCEDURE closeTicket(IN n_ticket_id BIGINT UNSIGNED)
 END $$
 DELIMITER ;
 
-SELECT * FROM commentAssignment;
-
 -- Admin Username: admin1 Password: abc123
 -- Tech Username: tech1 Password: 123abc
-INSERT INTO users (password, name, address, email, type)
-    VALUES("$2b$12$CVFokaV.Cxyp1emjsAq6ZOkYMhKJwbkgW4O729c8cUlpmYJbeKr9S", "admin1", "abcd", "admin@neu.edu", "admin"),
-    ("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech1", "abcd", "tech1@neu.edu", "tech"), 
-     ("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech2", "abcd", "tech2@neu.edu", "tech");
+call createUser("$2b$12$CVFokaV.Cxyp1emjsAq6ZOkYMhKJwbkgW4O729c8cUlpmYJbeKr9S","admin", 
+	"admin1", "82 Washboard St, Boston MA 22125", "admin@neu.edu", "Boston");
+call createUser("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", 
+	"tech", "tech1", "Needle Rd, 19822", "tech1@neu.edu", "Seattle");
+call createUser("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech", "tech2", "162 Abracadabra Ln",
+	"tech2@neu.edu", "San Francisco | Bay Area");

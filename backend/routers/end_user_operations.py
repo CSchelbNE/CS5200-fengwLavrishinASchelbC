@@ -22,8 +22,10 @@ def add_new_user(user: User, db: Engine = Depends(get_db)):
     hashed_password = hash(user.password)  # hashed pw is stored in models.User.password
     conn = db.connect()
     trans = conn.begin()
-    new_user = conn.execute(f"""INSERT INTO users (email,password,address,name, type) VALUES (%s, %s, %s, %s, %s)""",
-                            (str(user.email), str(hashed_password), str(user.address), str(user.name), str(user.type)))
+    new_user = conn.execute(f"""CALL createUser(%s,%s,%s,%s,%s,%s)""", (str(hashed_password),
+                                                str(user.type), str(user.name), str(user.address),
+                                                                        str(user.email), str(user.campus))).first()
+
     trans.commit()
     return new_user
 
