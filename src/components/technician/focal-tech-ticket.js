@@ -19,7 +19,7 @@ const FocalTechTicket = ({ticket, tech_id}) => {
         )
     }
     return(
-        <div className="d-flex flex-column pt-1" style={{height: "95%", width: "95%"}}>
+        <div className="d-flex flex-column mt-2 pt-1" style={{height: "95%", width: "95%"}}>
             <FormControl mb="3" height="fit-content" className="d-flex flex-row align-items-center ms-3 ">
                 <FormLabel className="w-25">Subject: </FormLabel>
                 <Box p="1" m="1" className="w-75" height="fit-content" minHeight="2rem" borderWidth="1px">{ticket.subject}</Box>
