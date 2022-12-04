@@ -3,8 +3,8 @@ import EditTicketModal from "./edit-ticket-modal";
 import React from "react";
 import {useDispatch} from "react-redux";
 import {deleteTicketThunk, getCommentsThunk} from "../../redux/services/tickets-thunk";
-import ViewCommentsModal from "./comments-modal";
-import {getComments} from "../../redux/services/ticket-services";
+import ViewCommentsModal from "./modals/comments-modal";
+import SurveyModal from "./modals/survey-modal";
 
 
 const FocalTicket = ({ticket}) => {
@@ -40,6 +40,7 @@ const FocalTicket = ({ticket}) => {
             </FormControl>
             <div className="d-flex mt-3 flex-row align-items-center justify-content-end">
                 <ViewCommentsModal ticket={ticket}/>
+                <SurveyModal ticket={ticket}/>
                 <Button onClick={() => dispatch(deleteTicketThunk(ticket.ticket_id))} className={deleteButton}>Delete</Button>
             </div>
         </div>

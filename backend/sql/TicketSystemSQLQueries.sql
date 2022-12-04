@@ -62,6 +62,25 @@ CREATE TABLE comment (
     comment_body VARCHAR(255) NOT NULL
 );
 
+DROP TABLE IF EXISTS survey;
+CREATE TABLE survey (
+	survey_id SERIAL PRIMARY KEY,
+    satisfaction_level INT, 
+    survey_body VARCHAR(255) NOT NULL
+);
+
+DROP TABLE IF EXISTS surveyAssignment; 
+CREATE TABLE surveyAssignemnt (
+		assignment_id SERIAL PRIMARY KEY,
+        ticket_id BIGINT UNSIGNED,
+        user_id BIGINT UNSIGNED,
+        survey_id BIGINT UNSIGNED,
+		FOREIGN KEY (ticket_id) REFERENCES ticket(ticket_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		FOREIGN KEY (user_id) REFERENCES user(user_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+		FOREIGN KEY (survey_id) REFERENCEs survey(survey_id) ON UPDATE RESTRICT ON DELETE RESTRICT	
+);
+
+
 DROP TABLE IF EXISTS commentAssignment;
 CREATE TABLE commentAssignment (
 	assignment_id SERIAL PRIMARY KEY,
@@ -73,7 +92,17 @@ CREATE TABLE commentAssignment (
     FOREIGN KEY (tech_id) REFERENCEs users(user_id) ON UPDATE RESTRICT ON DELETE RESTRICT	
 );
 
-SELECT comment_id,comment_body,name FROM users JOIN (SELECT * FROM comment NATURAL JOIN commentAssignment) as T ON T.tech_id = users.user_id;
+DROP PROCEDURE IF EXISTS fillOutSurvey;
+DELIMITER $$
+CREATE PROCEDURE fillOutSurvey(IN n_survey_body VARCHAR(255), IN n_ticket_id BIGINT UNSIGNED,
+		IN n_user_id BIGINT UNSIGNED, IN n_satisfaction_level BIGINT UNSIGNED)
+	BEGIN
+		declare n_survey_id BIGINT UNSIGNED;
+        INSERT INTO survey (survey_body, satisfaction_level) VALUES (n_survey_body, n_satisfaction_level);
+        SET n_survey_id = last_insert_id();
+        INSERT INTO surveyAssignemnt (ticket_id, user_id, survey_id) VALUES (n_ticket_id, n_user_id, n_survey_id);
+        SELECT * FROM survey WHERE n_survey_id;
+END $$
 
 
 DROP PROCEDURE IF EXISTS createComment;

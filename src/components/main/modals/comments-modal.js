@@ -1,7 +1,6 @@
 import {
     Accordion,
-    Box,
-    Button, FormControl, FormErrorMessage, FormLabel,
+    Button,
     Modal, ModalBody,
     ModalCloseButton,
     ModalContent, ModalFooter,
@@ -9,18 +8,13 @@ import {
     ModalOverlay, Stack, Textarea,
     useDisclosure
 } from "@chakra-ui/react";
-import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {getCommentsThunk} from "../../redux/services/tickets-thunk";
+import {useSelector} from "react-redux";
 import CommentAccordianItem from "./comment-accordian-item";
 
 const ViewCommentsModal = ({ticket}) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    console.log(ticket)
-    const dispatch = useDispatch();
     const comments = useSelector(state => state.tickets.focalTicketComments);
-    const focalTicket = useSelector(state => state.tickets.focalTicket);
-    // USED TO REFRESH UI WHEN THE MODAL IS OPENED NECESSARY TO PREVENT DEFAULT INPUT LEAKING
+    console.log(ticket);
     return (
         <>
             <Button me="2" colorScheme="telegram" onClick={onOpen}>View Comments</Button>
