@@ -65,3 +65,9 @@ def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
                                    str(ticket.user_id))).first()
     trans.commit()
     return new_ticket
+
+
+@ticket_router.get("/get-comments/{ticket_id}")
+def get_comments(ticket_id: int, db: Engine = Depends(get_db)):
+    print(ticket_id)
+    return db.execute(f"""CALL getCommentsByID(%s)""", (str(ticket_id))).all()

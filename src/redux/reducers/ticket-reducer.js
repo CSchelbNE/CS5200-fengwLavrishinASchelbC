@@ -1,5 +1,12 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createTicketsThunk, deleteTicketThunk, editTicketThunk, getTicketsThunk, getClosedTicketsThunk} from "../services/tickets-thunk";
+import {
+    createTicketsThunk,
+    deleteTicketThunk,
+    editTicketThunk,
+    getTicketsThunk,
+    getClosedTicketsThunk,
+    getCommentsThunk
+} from "../services/tickets-thunk";
 
 const ticketSlice = createSlice({
     name: "user",
@@ -25,6 +32,7 @@ const ticketSlice = createSlice({
             state.closedTickets = [];
             state.focalTicket = null;
             state.focalClosedTicket = null;
+            state.focalTicketComments = [];
         }
 
     },
@@ -71,6 +79,11 @@ const ticketSlice = createSlice({
                 } else {
                      state.focalTicket = null;
                  }
+            },
+        [getCommentsThunk.fulfilled] :
+            (state, {payload}) => {
+                state.focalTicketComments = payload.data;
+                console.log(state.focalTicketComments)
             }
     }
     }

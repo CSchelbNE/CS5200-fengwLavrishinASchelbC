@@ -2,11 +2,14 @@ import {Box, Button, FormControl, FormLabel} from "@chakra-ui/react";
 import EditTicketModal from "./edit-ticket-modal";
 import React from "react";
 import {useDispatch} from "react-redux";
-import {deleteTicketThunk} from "../../redux/services/tickets-thunk";
+import {deleteTicketThunk, getCommentsThunk} from "../../redux/services/tickets-thunk";
+import ViewCommentsModal from "./comments-modal";
+import {getComments} from "../../redux/services/ticket-services";
 
 
 const FocalTicket = ({ticket}) => {
     const dispatch = useDispatch();
+    if (ticket) dispatch(getCommentsThunk(ticket.ticket_id));
     if (ticket === null){
         return(
             <>
@@ -35,7 +38,8 @@ const FocalTicket = ({ticket}) => {
                 <FormLabel >Description:</FormLabel>
                 <Box p="1" height="90%" width="inherit" borderWidth="1px">{ticket.description}</Box>
             </FormControl>
-            <div className="d-flex mt-3 justify-content-end">
+            <div className="d-flex mt-3 flex-row align-items-center justify-content-end">
+                <ViewCommentsModal ticket={ticket}/>
                 <Button onClick={() => dispatch(deleteTicketThunk(ticket.ticket_id))} className={deleteButton}>Delete</Button>
             </div>
         </div>

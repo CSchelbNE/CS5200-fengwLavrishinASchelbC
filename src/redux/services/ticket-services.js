@@ -19,3 +19,7 @@ export const editTicket = (ticket) => {
 export const deleteTicket = (ticketId) => {
     return axios.delete(URL_STRING+"delete-ticket/" + ticketId.toString());
 }
+
+export const getComments = (ticketId) => {
+    return axios.get(URL_STRING+"get-comments/"+ticketId.toString());
+}

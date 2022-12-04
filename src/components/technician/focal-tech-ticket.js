@@ -24,10 +24,6 @@ const FocalTechTicket = ({ticket, tech_id}) => {
                 <FormLabel className="w-25">Subject: </FormLabel>
                 <Box p="1" m="1" className="w-75" height="fit-content" minHeight="2rem" borderWidth="1px">{ticket.subject}</Box>
             </FormControl>
-            <FormControl mb="3"  height="fit-content" className="d-flex flex-row align-items-center ms-3 me-3">
-                <FormLabel className="w-25">Technician: </FormLabel>
-                <Box p="1" m="1" className="w-75" height="fit-content" minHeight="2rem" borderWidth="1px">{ticket.tec}</Box>
-            </FormControl>
             <FormControl mb="3" height="fit-content" className="d-flex flex-row align-items-center ms-3 me-3">
                 <FormLabel className="w-25">Status: </FormLabel>
                 <Box p="1" m="1" className="w-75" height="fit-content" minHeight="2rem"  borderWidth="1px">{ticket.status}</Box>
