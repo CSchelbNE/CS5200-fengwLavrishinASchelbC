@@ -17,3 +17,7 @@ export const getAssignedTickets = (technician_id) => {
 export const acceptTicket = ({ticket_id, technician_id}) => {
     return axios.put(URL_STRING+"accept-ticket/?ticket_id="+ticket_id.toString()+"&tech_id="+technician_id.toString());
 }
+
+export const createComment = (comment) => {
+    return axios.post(URL_STRING + "create-comment", comment);
+}

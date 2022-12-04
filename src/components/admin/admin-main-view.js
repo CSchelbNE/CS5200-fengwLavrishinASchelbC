@@ -31,11 +31,11 @@ const AdminMainView = () => {
     }, []);
 
     return (
-        <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", maxWidth: "100vw"}}>
+        <div className="login-bg position-relative p-0" style={{height: "100vh",maxHeight: "100vh", maxWidth: "100vw"}}>
             <div className="position-absolute top-0 start-0 p-0">
                 <LogoutHeader user={currentUser}/>
             </div>
-            <div className="position-absolute bottom-0 start-50 translate-middle-x">
+            <div className="position-absolute bottom-0 start-50 bg-white translate-middle-x">
                 <Flex direction="row" mb="2" height="75vh" width="65vw" borderWidth="2px" p="0">
                     <Box  style={{overflowY: "scroll", direction: "ltr"}} height="100%" minWidth="fit-content" borderWidth="1px">
                         <Select style={{borderRadius: 0}}>

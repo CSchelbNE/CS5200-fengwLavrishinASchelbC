@@ -3,6 +3,7 @@ import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
 import {closeTicketThunk} from "../../redux/services/technician-thunk";
+import CreateCommentModal from "./create-comment-modal";
 
 
 const FocalAssignedTicket = ({ticket, tech_id}) => {
@@ -35,8 +36,9 @@ const FocalAssignedTicket = ({ticket, tech_id}) => {
                 <FormLabel >Description:</FormLabel>
                 <Box p="1" height="90%" width="inherit" borderWidth="1px">{ticket.description}</Box>
             </FormControl>
-            <div className="d-flex mt-3 justify-content-end">
-                <Button onClick={() => dispatch(closeTicketThunk(ticket.ticket_id))} className="bg-danger text-white">Close Ticket</Button>
+            <div className="d-flex mt-3 flex-row align-items-baseline justify-content-end">
+                <CreateCommentModal ticket_id={ticket.ticket_id} tech_id={tech_id}/>
+                <Button onClick={() => dispatch(closeTicketThunk(ticket.ticket_id))} className="ms-3 bg-danger text-white">Close Ticket</Button>
             </div>
         </div>
     );

@@ -8,6 +8,7 @@ import user from "./redux/reducers/user"
 import tickets from "./redux/reducers/ticket-reducer"
 import approvals from "./redux/reducers/admin-reducer"
 import technicianData from "./redux/reducers/technician-reducer"
+import "./index.css"
 
 const store = configureStore({
     reducer : {user: user, tickets: tickets, approvals: approvals, technicianData: technicianData}

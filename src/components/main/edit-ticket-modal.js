@@ -54,7 +54,7 @@ const EditTicketModal = ({ticket}) => {
   }
   return (
     <>
-      <Button mt="1" className={editButton} colorScheme="gray" onClick={onOpen}>Edit</Button>
+      <Button mt="1" className={editButton} colorScheme="telegram" onClick={onOpen}>Edit</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

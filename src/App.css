@@ -13,3 +13,13 @@
 .wd-remove-focus:focus {
     outline: none;
 }
+
+.wd-gray {
+    background-color:#a9a9a9 ;
+}
+
+.wd-absolute {
+    position: absolute;
+    top: 0;
+    right: 200px;
+}

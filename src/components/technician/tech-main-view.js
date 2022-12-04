@@ -61,7 +61,7 @@ const TechnicianMainView = () => {
     , [assignedOrOpened]);
 
     return (
-        <div className="position-relative p-0" style={{height: "98vh",maxHeight: "100vh", width: "98vw", maxWidth: "100vw"}}>
+        <div className="login-bg position-relative p-0" style={{height: "100vh",maxHeight: "100vh", width: "100vw", maxWidth: "100vw"}}>
             <LogoutHeader user={currentUser}/>
             <div className="bg-white position-absolute bottom-0 start-50 translate-middle-x">
                 <Flex direction="row" mb="2" height="75vh" width="65vw" borderWidth="2px" p="0">

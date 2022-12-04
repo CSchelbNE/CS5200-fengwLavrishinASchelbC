@@ -31,3 +31,9 @@ class Approval(BaseModel):
     description: str
     type: str
     approval_id: Optional[int]
+
+
+class Comment(BaseModel):
+    comment_body: str
+    tech_id: int
+    ticket_id: int

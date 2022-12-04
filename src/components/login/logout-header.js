@@ -35,8 +35,8 @@ const LogoutHeader = ({user}) => {
     }
     return(
         <Heading className="position-relative" height="3.85rem" width="100vw" maxWidth="100vw" bg="black" p="2" fontSize="1.5rem">
-          <div className="position-absolute end-0 top-0">
-            <Menu preventOverflow={true} flip={true}>
+          <div className="position-absolute start-0 top-0">
+            <Menu  isLazy={true} lazyBehavior={"unmount"}>
               <MenuButton
                 rounded={'full'}
                 variant={'link'}

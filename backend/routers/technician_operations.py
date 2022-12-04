@@ -2,6 +2,7 @@ from backend.database import get_db
 from sqlalchemy.engine import Engine
 from fastapi import Response, status, HTTPException, Depends
 from fastapi import APIRouter
+from backend.schemas import Comment
 
 technician_router = APIRouter(
     prefix="/tech",
@@ -33,4 +34,13 @@ def close_ticket(ticket_id: int, db: Engine = Depends(get_db)):
     return db.execute(f"""CALL closeTicket(%s)""", (str(ticket_id))).first()
 
 
-# http://localhost:8000/tech/accept-ticket/?ticket_id=2&technician_id=6
+@technician_router.post("/create-comment/")
+def create_comment(comment: Comment, db: Engine = Depends(get_db)):
+    conn = db.connect()
+    trans = conn.begin()
+    result = db.execute(f"""CALL createComment(%s, %s, %s)""", (str(comment.comment_body), str(comment.ticket_id),
+                                                              str(comment.tech_id))).first()
+    trans.commit()
+    return result
+
+

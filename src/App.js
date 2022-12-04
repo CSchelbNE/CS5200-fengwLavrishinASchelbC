@@ -10,7 +10,7 @@ import TechnicianMainView from "./components/technician/tech-main-view";
 
 function App() {
   return (
-    <div className="App container-fluid m-0 p-0">
+    <div className="App container-fluid m-0 p-0" style={{maxWidth: "100vw", maxHeight: "100vh"}}>
         <BrowserRouter>
                 <Routes>
                     <Route index element={<LoginScreen/>}/>

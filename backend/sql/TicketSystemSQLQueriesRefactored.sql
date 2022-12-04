@@ -56,38 +56,6 @@ CREATE TABLE ticketAssignment(
 );
 
 
-DROP TABLE IF EXISTS comment;
-CREATE TABLE comment (
-	comment_id SERIAL PRIMARY KEY,
-    comment_body VARCHAR(255) NOT NULL
-);
-
-DROP TABLE IF EXISTS commentAssignment;
-CREATE TABLE commentAssignment (
-	assignment_id SERIAL PRIMARY KEY,
-    comment_id BIGINT UNSIGNED NOT NULL,
-    ticket_id BIGINT UNSIGNED NOT NULL,
-    tech_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (comment_id) REFERENCES comment(comment_id) ON UPDATE RESTRICT ON DELETE CASCADE,
-    FOREIGN KEY (ticket_id) REFERENCES ticket(ticket_id) ON UPDATE RESTRICT ON DELETE CASCADE,
-    FOREIGN KEY (tech_id) REFERENCEs users(user_id) ON UPDATE RESTRICT ON DELETE RESTRICT	
-);
-
-
-DROP PROCEDURE IF EXISTS createComment;
-DELIMITER $$
-CREATE PROCEDURE createComment(IN n_comment_body VARCHAR(255), IN n_ticket_id BIGINT UNSIGNED,
-		IN n_tech_id BIGINT UNSIGNED)
-	BEGIN
-		declare n_comment_id BIGINT UNSIGNED;
-        INSERT INTO comment (comment_body) VALUES (n_comment_body);
-        SET n_comment_id = last_insert_id();
-        INSERT INTO commentAssignment (comment_id, ticket_id, tech_id) VALUES (n_comment_id, n_ticket_id, n_tech_id);
-        SELECT * FROM comment WHERE comment_id = n_comment_id;
-END $$
-DELIMITER ;
-
-
 
 DROP PROCEDURE IF EXISTS createTicket;
 DELIMITER $$
