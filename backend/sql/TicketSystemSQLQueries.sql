@@ -73,6 +73,8 @@ CREATE TABLE commentAssignment (
     FOREIGN KEY (tech_id) REFERENCEs users(user_id) ON UPDATE RESTRICT ON DELETE RESTRICT	
 );
 
+SELECT comment_id,comment_body,name FROM users JOIN (SELECT * FROM comment NATURAL JOIN commentAssignment) as T ON T.tech_id = users.user_id;
+
 
 DROP PROCEDURE IF EXISTS createComment;
 DELIMITER $$
@@ -87,7 +89,14 @@ CREATE PROCEDURE createComment(IN n_comment_body VARCHAR(255), IN n_ticket_id BI
 END $$
 DELIMITER ;
 
-
+DROP PROCEDURE IF EXISTS getCommentsByID;
+DELIMITER $$
+CREATE PROCEDURE getCommentsByID(IN n_ticket_id BIGINT UNSIGNED)
+	BEGIN
+		SELECT ticket_id, comment_id,comment_body,name FROM users JOIN (SELECT * FROM comment NATURAL JOIN commentAssignment) as 
+        T ON T.tech_id = users.user_id HAVING T.ticket_id = n_ticket_id;
+END $$
+DELIMITER ;
 
 DROP PROCEDURE IF EXISTS createTicket;
 DELIMITER $$
@@ -238,6 +247,8 @@ CREATE PROCEDURE closeTicket(IN n_ticket_id BIGINT UNSIGNED)
         SELECT * FROM ticket WHERE ticket_id = n_ticket_id;
 END $$
 DELIMITER ;
+
+SELECT * FROM commentAssignment;
 
 -- Admin Username: admin1 Password: abc123
 -- Tech Username: tech1 Password: 123abc

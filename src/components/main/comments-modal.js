@@ -29,7 +29,8 @@ const ViewCommentsModal = ({ticket}) => {
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>
-                        New Comment
+                        {"Comments For Ticket #"+(ticket.ticket_id+ 684392).toString()}
+
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>

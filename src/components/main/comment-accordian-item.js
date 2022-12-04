@@ -9,13 +9,13 @@ const CommentAccordianItem = ({comment}) => {
             <h2>
               <AccordionButton>
                 <Box flex='1' textColor="black" textAlign='left'>
-                    {"Comment: #"+comment.comment_id}
+                    {"Comment: #"+(comment.comment_id+24145).toString()}
                 </Box>
                 <AccordionIcon textColor="black" />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4}>
-                {comment.comment_body}
+            <AccordionPanel borderLeft={"1px"} borderRight={"1px"} borderTop={"1px"} borderRightColor={"gray.100"} borderLeftColor={"gray.100"} borderTopColor={"gray.100"} pb={4}>
+                {comment.comment_body + " - " + comment.name}
             </AccordionPanel>
       </AccordionItem>
     </div>
