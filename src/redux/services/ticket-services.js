@@ -20,6 +20,11 @@ export const deleteTicket = (ticketId) => {
     return axios.delete(URL_STRING+"delete-ticket/" + ticketId.toString());
 }
 
+export const createSurvey = (survey) => {
+    console.log(survey)
+    return axios.post(URL_STRING+"complete-survey/"+survey.ticket_id.toString(), survey);
+}
+
 export const getComments = (ticketId) => {
     return axios.get(URL_STRING+"get-comments/"+ticketId.toString());
 }

@@ -3,10 +3,9 @@ import sys
 sys.path.append("../")
 from backend.database import get_db
 from sqlalchemy.engine import Engine
-from fastapi import Response, status, HTTPException, Depends
+from fastapi import Depends
 from fastapi import APIRouter
-from backend.schemas import Ticket
-
+from backend.schemas import Ticket, Survey
 
 ticket_router = APIRouter(
     prefix="/tickets",
@@ -16,7 +15,7 @@ ticket_router = APIRouter(
 
 @ticket_router.get("/get-tickets/{user_id}")
 def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
-    return db.execute(f"""CALL selectTicketsByID(%s)""", (str(user_id), )).all()
+    return db.execute(f"""CALL selectTicketsByID(%s)""", (str(user_id),)).all()
 
 
 # SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s
@@ -24,7 +23,7 @@ def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
 @ticket_router.get("/get-closed-tickets/{user_id}")
 def get_users_closed_tickets(user_id: int, db: Engine = Depends(get_db)):
     print(user_id)
-    return db.execute(f"""CALL selectClosedTicketsByID(%s)""", (str(user_id), )).all()
+    return db.execute(f"""CALL selectClosedTicketsByID(%s)""", (str(user_id),)).all()
 
 
 @ticket_router.put("/edit-ticket/{ticket_id}")
@@ -71,3 +70,12 @@ def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
 def get_comments(ticket_id: int, db: Engine = Depends(get_db)):
     print(ticket_id)
     return db.execute(f"""CALL getCommentsByID(%s)""", (str(ticket_id))).all()
+
+
+@ticket_router.post("/complete-survey/{ticket_id}")
+def complete_survey(ticket_id: int, survey: Survey, db: Engine = Depends(get_db)):
+    conn = db.connect()
+    trans = conn.begin()
+    conn.execute(f"""CALL fillOutSurvey(%s,%s,%s,%s)""", (str(survey.survey_body), str(survey.user_id),
+                                                          str(ticket_id), survey.satisfaction_level))
+    trans.commit()

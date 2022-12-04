@@ -37,3 +37,10 @@ class Comment(BaseModel):
     comment_body: str
     tech_id: int
     ticket_id: int
+
+
+class Survey(BaseModel):
+    survey_body: str
+    satisfaction_level: int
+    user_id: int
+    ticket_id: int

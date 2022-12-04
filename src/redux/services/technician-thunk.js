@@ -25,3 +25,4 @@ export const createCommentThunk = createAsyncThunk("technician/create-comment",
     async (comment) => {
         return await createComment(comment);
     })
+

@@ -1,25 +1,37 @@
 import {
-    Accordion,
     Button,
     Modal, ModalBody,
     ModalCloseButton,
     ModalContent, ModalFooter,
     ModalHeader,
     ModalOverlay, Radio, RadioGroup, Stack, Textarea,
-    useDisclosure
+    useDisclosure, useToast
 } from "@chakra-ui/react";
 import React, {useState} from "react";
+import {useDispatch} from "react-redux";
+import {createSurveyThunk} from "../../../redux/services/tickets-thunk";
 
 const SurveyModal = ({ticket}) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [survey, setSurvey] = useState("");
+    const toast = useToast()
     const [satisfaction, setSatisfaction] = useState(5);
     const firstField = React.useRef();
+    const dispatch = useDispatch();
     const styling = (ticket.status === "CLOSED" ? "" : "d-none")
-    console.log(ticket);
     const submitSurvey = () => {
         const newSurvey = {"survey_body" : survey, "ticket_id" :
             ticket.ticket_id, "user_id": ticket.user_id, "satisfaction_level": satisfaction}
+        console.log("here")
+        dispatch(createSurveyThunk(newSurvey));
+        toast({
+              title: 'Survey created.',
+              description: "Thank you for using our service!",
+              status: 'success',
+              duration: 7000,
+              isClosable: true,
+        });
+        onClose();
     }
     return (
         <>
@@ -62,9 +74,9 @@ const SurveyModal = ({ticket}) => {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button  mr={3} onClick={onClose}>
-                            Submit
-                        </Button>
+                    <Button onClick={submitSurvey}>
+                          Submit
+                    </Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

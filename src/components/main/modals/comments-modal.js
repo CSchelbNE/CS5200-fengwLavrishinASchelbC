@@ -10,11 +10,11 @@ import {
 } from "@chakra-ui/react";
 import {useSelector} from "react-redux";
 import CommentAccordianItem from "./comment-accordian-item";
+import uuid from "react-uuid";
 
 const ViewCommentsModal = ({ticket}) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const comments = useSelector(state => state.tickets.focalTicketComments);
-    console.log(ticket);
     return (
         <>
             <Button me="2" colorScheme="telegram" onClick={onOpen}>View Comments</Button>
@@ -30,7 +30,7 @@ const ViewCommentsModal = ({ticket}) => {
                     <ModalBody>
                         <Stack spacing='24px'>
                             <Accordion allowMultiple={true} allowToggle={true}>
-                                {!comments ? <div/> : comments.map((e) => <CommentAccordianItem comment={e}/>)}
+                                {!comments ? <div/> : comments.map((e) => <CommentAccordianItem key={uuid()} comment={e}/>)}
                             </Accordion>
                         </Stack>
                     </ModalBody>

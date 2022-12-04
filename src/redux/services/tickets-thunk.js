@@ -1,6 +1,6 @@
 import {createAsyncThunk}
     from "@reduxjs/toolkit"
-import {createTicket, deleteTicket, editTicket, getTickets, getClosedTickets, getComments} from "./ticket-services";
+import {createTicket, deleteTicket, editTicket, getTickets, getClosedTickets, getComments, createSurvey} from "./ticket-services";
 
 export const getTicketsThunk = createAsyncThunk("tickets/findTickets", async (user_id) => {
     return await getTickets(user_id);
@@ -28,4 +28,10 @@ export const deleteTicketThunk = createAsyncThunk("tickets/deleteTIcket",
 export const getCommentsThunk = createAsyncThunk("tickets/getcomments",
     async (ticket_id) => {
         return await getComments(ticket_id);
+    })
+
+export const createSurveyThunk = createAsyncThunk("tickets/createSurvey",
+    async (survey) => {
+    console.log(survey)
+        return await createSurvey(survey);
     })
