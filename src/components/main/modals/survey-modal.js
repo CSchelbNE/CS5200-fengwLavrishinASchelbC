@@ -18,7 +18,7 @@ const SurveyModal = ({ticket}) => {
     const [satisfaction, setSatisfaction] = useState(5);
     const firstField = React.useRef();
     const dispatch = useDispatch();
-    const styling = (ticket.status === "CLOSED" ? "" : "d-none")
+    const styling = (ticket.status === "CLOSED") ? "" : "d-none";
     const submitSurvey = () => {
         const newSurvey = {"survey_body" : survey, "ticket_id" :
             ticket.ticket_id, "user_id": ticket.user_id, "satisfaction_level": satisfaction}
