@@ -1,5 +1,5 @@
 import axios from "axios";
-const URL_STRING = "http://localhost:8000/tickets/";
+const URL_STRING = "https://cs5200-backend.herokuapp.com/tickets/";
 export const getTickets = (userId) => {
     return axios.get(URL_STRING +"get-tickets/"+ userId);
 }

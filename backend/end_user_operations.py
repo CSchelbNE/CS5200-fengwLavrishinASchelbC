@@ -1,20 +1,16 @@
-import sys
-
-sys.path.append("../")
 import passlib.exc
-from backend.database import get_db
+from database import get_db
 from sqlalchemy.engine import Engine
 from fastapi import Response, status, HTTPException, Depends
 from fastapi import APIRouter
-from backend.utils import hash, verify_password
-from backend.schemas import User, Credentials, Survey
+from utils import hash, verify_password
+from schemas import User, Credentials, Survey
 
 
 end_user_router = APIRouter(
     prefix="/users",
     tags=['users']
 )
-
 
 @end_user_router.post("/add-user")
 def add_new_user(user: User, db: Engine = Depends(get_db)):

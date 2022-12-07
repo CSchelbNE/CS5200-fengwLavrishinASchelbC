@@ -24,7 +24,7 @@ const SignUpModal = () => {
   const [address, setAddress] = React.useState("");
   const [selectedCampus, setCampus] = React.useState("");
 
-  const URL_STRING = "http://localhost:8000/users/add-user";
+  const URL_STRING = "https://cs5200-backend.herokuapp.com/users/add-user";
   const new_user = {
     "type" : "end-user",
     "name" : name,
