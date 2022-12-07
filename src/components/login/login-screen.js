@@ -9,7 +9,7 @@ import {addUser} from "../../redux/reducers/user";
 import {changeFocus} from "../../redux/reducers/ticket-reducer";
 
 const LoginScreen = () => {
-    const URL_STRING = "https://cs5200-backend.herokuapp.com/login";
+    const URL_STRING = "https://cs5200-backend.herokuapp.com/users/login";
     const [userName, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const dispatch = useDispatch();
