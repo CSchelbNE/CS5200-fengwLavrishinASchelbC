@@ -16,7 +16,7 @@ const FocalTicket = ({ticket}) => {
             </>
         )
     }
-    const deleteButton = ticket.status === "CLOSED" ? "d-none" : "bg-danger text-white";
+    const deleteButton = ticket.status === "CLOSED" || ticket.status === "DENIED" ? "d-none" : "bg-danger text-white";
     return(
         <div className="d-flex flex-column pt-1" style={{height: "95%", width: "95%"}}>
             <div className="d-flex justify-content-end mb-2">
