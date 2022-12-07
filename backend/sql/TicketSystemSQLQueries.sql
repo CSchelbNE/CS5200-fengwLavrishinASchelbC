@@ -131,7 +131,16 @@ DELIMITER ;
 
 
 
-SELECT * FROM survey;
+DROP PROCEDURE IF EXISTS getApprovals;
+DELIMITER $$
+CREATE PROCEDURE getApprovals()
+	BEGIN 
+		SELECT * FROM approval JOIN (SELECT * FROM problem NATURAL JOIN (SELECT email, user_id,
+		priority, date_created, ticket_id, status FROM users NATURAL JOIN ticket) AS T)  
+		AS P on p.ticket_id = approval.ticket_id WHERE approval.status = "REQUIRES APPROVAL";
+	END $$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS createComment;
 DELIMITER $$
 CREATE PROCEDURE createComment(IN n_comment_body VARCHAR(255), IN n_ticket_id BIGINT UNSIGNED,
@@ -200,11 +209,6 @@ CREATE PROCEDURE createTicketWithApproval(IN n_subject VARCHAR(25), IN n_type VA
 END $$
 DELIMITER ;
 SELECT * FROM ticket;
-
-
-
-
-
 
 
 
@@ -278,8 +282,8 @@ CREATE PROCEDURE selectTicketsByID(IN n_user_id BIGINT UNSIGNED)
 	BEGIN 
 		SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, group_concat(name) as technicians
         FROM ticket LEFT OUTER JOIN (SELECT ticket_id, name, tech_assigned_to FROM users JOIN ticketAssignment ON user_id = 
-        tech_assigned_to) AS T ON t.ticket_id = ticket.ticket_id GROUP BY ticket.ticket_id, priority, date_created, 
-        status, user_id HAVING user_id = n_user_id) as T WHERE status="OPEN" OR status="REQUIRES APPROVAL";
+        tech_assigned_to) AS t ON t.ticket_id = ticket.ticket_id GROUP BY ticket.ticket_id, priority, date_created, 
+        status, user_id HAVING user_id = n_user_id) as A WHERE status="OPEN" OR status="REQUIRES APPROVAL";
 END $$
 DELIMITER ;
 
