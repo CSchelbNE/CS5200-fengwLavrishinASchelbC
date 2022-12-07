@@ -1,11 +1,8 @@
-import sys
-
-sys.path.append("../")
-from backend.database import get_db
+from database import get_db
 from sqlalchemy.engine import Engine
 from fastapi import Depends
 from fastapi import APIRouter
-from backend.schemas import Ticket, Survey
+from schemas import Ticket, Survey
 
 ticket_router = APIRouter(
     prefix="/tickets",
@@ -21,6 +18,7 @@ def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
     allTickets = db.execute(f"""CALL selectTicketsByID(%s)""", (str(user_id),)).all()
     trans.commit()
     return allTickets
+
 
 # SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s
 

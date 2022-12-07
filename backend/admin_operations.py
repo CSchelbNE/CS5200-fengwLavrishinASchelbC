@@ -1,12 +1,8 @@
-import sys
-
-import passlib.exc
-sys.path.append("../")
-from backend.database import get_db
+from database import get_db
 from sqlalchemy.engine import Engine
 from fastapi import Depends
 from fastapi import APIRouter
-from backend.schemas import Approval
+from schemas import Approval
 
 admin_router = APIRouter(
     prefix="/admin",
