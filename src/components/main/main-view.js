@@ -43,9 +43,9 @@ const MainView = () => {
             // dispatch(getTicketsThunk(currentUser.user_id))
             console.log(openOrClosed);
             if (openOrClosed.value === "open-tickets"){
-                dispatch(getTicketsThunk(currentUser.user_id));
+                setTimeout(()=> dispatch(getTicketsThunk(currentUser.user_id)),500);
             } else {
-                dispatch(getClosedTicketsThunk(currentUser.user_id));
+                setTimeout(()=> dispatch(getClosedTicketsThunk(currentUser.user_id)),500);
             }
     },[focalTicket, openOrClosed]);
     return (
