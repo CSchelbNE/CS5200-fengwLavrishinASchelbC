@@ -12,12 +12,11 @@ ticket_router = APIRouter(
 )
 
 
-@ticket_router.get("/get-tickets/{user_id}")
-def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
+def run_transaction(db, function):
     conn = db.connect()
     with conn.begin() as trans:
         try:
-            res = conn.execute(f"""CALL selectTicketsByID(%s)""", (str(user_id),)).fetchall()
+            res = function()
             trans.commit()
             return res
         except sqlalchemy.exc.PendingRollbackError as err:
@@ -37,7 +36,15 @@ def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERFACE ERROR")
         except sqlalchemy.exc.InterfaceError as err:
             trans.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERFACE ERROR")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERNAL ERROR")
+
+
+@ticket_router.get("/get-tickets/{user_id}")
+def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
+    def get_tickets(conn):
+        res = conn.execute(f"""CALL selectTicketsByID(%s)""", (str(user_id),)).fetchall()
+        return res
+    run_transaction(db,get_tickets)
 
 
 # SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s
@@ -130,13 +137,13 @@ def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
                                           (str(ticket.subject), str(ticket.type),
                                            str(ticket.description), str(ticket.priority), str(ticket.status),
                                            str(ticket.date_created),
-                                           str(ticket.user_id))).first()
+                                           str(ticket.user_id))).fetchone()
             else:
                 new_ticket = conn.execute(f"""call createTicket(%s,%s,%s,%s,%s,%s,%s)""",
                                           (str(ticket.subject), str(ticket.type),
                                            str(ticket.description), str(ticket.priority), str(ticket.status),
                                            str(ticket.date_created),
-                                           str(ticket.user_id))).first()
+                                           str(ticket.user_id))).fetchone()
             trans.commit()
             return new_ticket
         except sqlalchemy.exc.PendingRollbackError as err:
@@ -189,6 +196,7 @@ def get_comments(ticket_id: int, db: Engine = Depends(get_db)):
 @ticket_router.post("/complete-survey/{ticket_id}")
 def complete_survey(ticket_id: int, survey: Survey, db: Engine = Depends(get_db)):
     conn = db.connect()
+
     with conn.begin() as trans:
         try:
             conn.execute(f"""CALL fillOutSurvey(%s,%s,%s,%s)""", (str(survey.survey_body), str(survey.user_id),

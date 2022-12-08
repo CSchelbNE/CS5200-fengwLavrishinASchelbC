@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL_STRING = "https://cs5200-backend.herokuapp.com/tech/";
+const URL_STRING = "http://localhost:8000/tech/";
 
 export const getOpenTickets = (tech_id) => {
     return axios.get(URL_STRING+"get-open-tickets/"+tech_id);
