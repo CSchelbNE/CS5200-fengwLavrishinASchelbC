@@ -12,11 +12,11 @@ ticket_router = APIRouter(
 )
 
 
-def run_transaction(db, function):
+def run_transaction(db, function, **kwargs):
     conn = db.connect()
     with conn.begin() as trans:
         try:
-            res = function()
+            res = function(conn)
             trans.commit()
             return res
         except sqlalchemy.exc.PendingRollbackError as err:
