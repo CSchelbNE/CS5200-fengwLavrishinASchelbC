@@ -3,7 +3,7 @@ import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 import time
 from fastapi import HTTPException, status
-
+from sqlalchemy.exc import InvalidRequestError, InterfaceError, PendingRollbackError, OperationalError, InternalError
 first_load = True
 if first_load:
     username = input("Username: ").strip("")
@@ -50,23 +50,24 @@ def run_transaction(db, function, **kwargs):
             res = function(conn, kwargs)
             trans.commit()
             return res
-        except sqlalchemy.exc.InterfaceError as err:
+        except InterfaceError as err:
             trans.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERNAL ERROR")
-        except sqlalchemy.exc.PendingRollbackError as err:
+        except PendingRollbackError as err:
             trans.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ROLLBACK OCCURRED")
-        except sqlalchemy.exc.OperationalError as err:
+        except OperationalError as err:
             trans.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="OPS ERROR")
-        except sqlalchemy.exc.InvalidRequestError as err:
-            trans.rollback()
+        except InvalidRequestError as err:
+            trans.close()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INVALID REQ")
-        except sqlalchemy.exc.InternalError as err:
+        except InternalError as err:
             trans.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERNAL ERR")
         except AssertionError as err:
             trans.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ASSERTION ERROR")
         finally:
+            trans.close()
             conn.close()
