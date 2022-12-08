@@ -4,7 +4,7 @@ from database import get_db, run_transaction
 from sqlalchemy.engine import Engine
 from fastapi import APIRouter
 from schemas import Ticket, Survey
-from fastapi import status, HTTPException, Depends
+from fastapi import Depends
 
 ticket_router = APIRouter(
     prefix="/tickets",
