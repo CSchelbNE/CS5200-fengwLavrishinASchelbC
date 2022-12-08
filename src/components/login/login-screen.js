@@ -69,7 +69,9 @@ const LoginScreen = () => {
                             } else if (response.data.type === "tech"){
                                 navigate("/tech")
                             }
-                            }).catch(error => {setCredentialError(true)});
+                            }).catch(error => {
+                                console.log(error);
+                                setCredentialError(true)});
                     }} width="100%">Login</Button>
                     <SignUpModal/>
                 </Box>
