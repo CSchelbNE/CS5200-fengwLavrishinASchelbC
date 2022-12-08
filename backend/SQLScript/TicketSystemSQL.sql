@@ -3,7 +3,6 @@ CREATE DATABASE ticket_system;
 USE ticket_system;
 
 
-
 DROP TABLE IF EXISTS campus;
 create table campus (
 	campus_id SERIAL PRIMARY KEY,
@@ -118,8 +117,8 @@ CREATE TABLE commentAssignment (
 
 DROP PROCEDURE IF EXISTS fillOutSurvey;
 DELIMITER $$
-CREATE PROCEDURE fillOutSurvey(IN n_survey_body VARCHAR(255), IN n_ticket_id BIGINT UNSIGNED,
-		IN n_user_id BIGINT UNSIGNED, IN n_satisfaction_level BIGINT UNSIGNED)
+CREATE PROCEDURE fillOutSurvey(IN n_survey_body VARCHAR(255), IN n_user_id BIGINT UNSIGNED,
+		IN  n_ticket_id BIGINT UNSIGNED, IN n_satisfaction_level BIGINT UNSIGNED)
 	BEGIN
 		declare n_survey_id BIGINT UNSIGNED;
         INSERT INTO survey (survey_body, satisfaction_level) VALUES (n_survey_body, n_satisfaction_level);
@@ -211,23 +210,33 @@ CREATE PROCEDURE getApprovals()
 END $$
 DELIMITER ;
 
-
-
-
-
-
-
+SELECT * FROM TICKET NATURAL JOIN Problem;
 
 DROP PROCEDURE IF EXISTS updateTicketProblem;
 DELIMITER $$
 CREATE PROCEDURE updateTicketProblem(IN n_subject VARCHAR(25), IN n_type VARCHAR(64), 
 				IN n_description VARCHAR(255), IN n_ticket_id BIGINT UNSIGNED)
 	BEGIN
+		if(n_type = "Hardware") THEN
 		UPDATE problem SET 
 		description = n_description,
         subject = n_subject,
         type = n_type
         WHERE n_ticket_id = ticket_id;
+        UPDATE ticket SET 
+        status = "REQUIRES APPROVAL"
+        WHERE n_ticket_id = ticket_id;
+        END IF;
+        IF (n_type != "Hardware") THEN
+        UPDATE problem SET 
+		description = n_description,
+        subject = n_subject,
+        type = n_type
+        WHERE n_ticket_id = ticket_id;
+		UPDATE ticket SET 
+        status = "OPEN"
+        WHERE n_ticket_id = ticket_id;
+        END IF;
         IF (n_type = "Hardware") THEN INSERT INTO approval (status, ticket_id) VALUES ("REQUIRES APPROVAL", n_ticket_id);
         END IF;
         IF (n_type != "Hardware") THEN DELETE FROM approval WHERE ticket_id = n_ticket_id;
@@ -296,7 +305,7 @@ CREATE PROCEDURE selectTicketsByID(IN n_user_id BIGINT UNSIGNED)
 		SELECT * FROM problem NATURAL JOIN (SELECT ticket.ticket_id, priority, date_created, status, user_id, group_concat(name) as technicians
         FROM ticket LEFT OUTER JOIN (SELECT ticket_id, name, tech_assigned_to FROM users JOIN ticketAssignment ON user_id = 
         tech_assigned_to) AS T ON T.ticket_id = ticket.ticket_id GROUP BY ticket.ticket_id, priority, date_created, 
-        status, user_id HAVING user_id = n_user_id) as A WHERE status="OPEN" OR status="REQUIRES APPROVAL";
+        status, user_id HAVING user_id = n_user_id) as A WHERE status="APPROVED" OR status="OPEN" OR status="REQUIRES APPROVAL";
 END $$
 DELIMITER ;
 
@@ -348,3 +357,5 @@ call createUser("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy",
 	"tech", "tech1", "Needle Rd, 19822", "tech1@neu.edu", "Seattle");
 call createUser("$2b$12$Artl91bTDLq4l1X4k4WDG.3IMAdztyZ/6u71syfHPZRWecnoBB/Cy", "tech", "tech2", "162 Abracadabra Ln",
 	"tech2@neu.edu", "San Francisco | Bay Area");
+
+SELECT * FROM ticket;
