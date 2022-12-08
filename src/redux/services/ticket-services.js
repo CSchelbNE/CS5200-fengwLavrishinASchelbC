@@ -30,5 +30,7 @@ export const createSurvey = (survey) => {
 }
 
 export const getComments = (ticketId) => {
-    return axios.get(URL_STRING+"get-comments/"+ticketId.toString());
+    return axios.get(URL_STRING+"get-comments/"+ticketId.toString()).catch(err => {
+        return axios.get(URL_STRING+"get-comments/"+ticketId.toString());
+    });
 }

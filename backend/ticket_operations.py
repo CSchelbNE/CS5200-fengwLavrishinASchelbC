@@ -1,8 +1,10 @@
+import sqlalchemy.exc
+
 from database import get_db
 from sqlalchemy.engine import Engine
-from fastapi import Depends
 from fastapi import APIRouter
 from schemas import Ticket, Survey
+from fastapi import status, HTTPException, Depends
 
 ticket_router = APIRouter(
     prefix="/tickets",
@@ -12,15 +14,37 @@ ticket_router = APIRouter(
 
 @ticket_router.get("/get-tickets/{user_id}")
 def get_users_tickets(user_id: int, db: Engine = Depends(get_db)):
-    return db.execute(f"""CALL selectTicketsByID(%s)""", (str(user_id),)).all()
+    conn = db.connect()
+    trans = conn.begin()
+    try:
+        res = conn.execute(f"""CALL selectTicketsByID(%s)""", (str(user_id),)).all()
+        trans.commit()
+        return res
+    except sqlalchemy.exc.PendingRollbackError as err:
+        trans.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ROLLBACK OCCURRED")
+    except sqlalchemy.exc.OperationalError as err:
+        trans.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="OPS ERROR")
+
 
 
 # SELECT * FROM ticket NATURAL JOIN problem WHERE user_id = %s
 
 @ticket_router.get("/get-closed-tickets/{user_id}")
 def get_users_closed_tickets(user_id: int, db: Engine = Depends(get_db)):
-    print(user_id)
-    return db.execute(f"""CALL selectClosedTicketsByID(%s)""", (str(user_id),)).all()
+    conn = db.connect()
+    trans = conn.begin()
+    try:
+        res = conn.execute(f"""CALL selectClosedTicketsByID(%s)""", (str(user_id),)).all()
+        trans.commit()
+        return res
+    except sqlalchemy.exc.PendingRollbackError as err:
+        trans.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ROLLBACK OCCURRED")
+    except sqlalchemy.exc.OperationalError as err:
+        trans.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="OPS ERROR")
 
 
 @ticket_router.put("/edit-ticket/{ticket_id}")
@@ -47,26 +71,46 @@ def delete_ticket(ticket_id: int, db: Engine = Depends(get_db)):
 def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
     conn = db.connect()
     trans = conn.begin()
-    if (ticket.type == "Hardware"):
-        new_ticket = conn.execute(f"""call createTicketWithApproval(%s,%s,%s,%s,%s,%s,%s)""",
-                                  (str(ticket.subject), str(ticket.type),
-                                   str(ticket.description), str(ticket.priority), str(ticket.status),
-                                   str(ticket.date_created),
-                                   str(ticket.user_id))).first()
-    else:
-        new_ticket = conn.execute(f"""call createTicket(%s,%s,%s,%s,%s,%s,%s)""",
-                                  (str(ticket.subject), str(ticket.type),
-                                   str(ticket.description), str(ticket.priority), str(ticket.status),
-                                   str(ticket.date_created),
-                                   str(ticket.user_id))).first()
-    trans.commit()
-    return new_ticket
+    try:
+        if (ticket.type == "Hardware"):
+            new_ticket = conn.execute(f"""call createTicketWithApproval(%s,%s,%s,%s,%s,%s,%s)""",
+                                      (str(ticket.subject), str(ticket.type),
+                                       str(ticket.description), str(ticket.priority), str(ticket.status),
+                                       str(ticket.date_created),
+                                       str(ticket.user_id))).first()
+        else:
+            new_ticket = conn.execute(f"""call createTicket(%s,%s,%s,%s,%s,%s,%s)""",
+                                      (str(ticket.subject), str(ticket.type),
+                                       str(ticket.description), str(ticket.priority), str(ticket.status),
+                                       str(ticket.date_created),
+                                       str(ticket.user_id))).first()
+        trans.commit()
+        return new_ticket
+    except sqlalchemy.exc.PendingRollbackError as err:
+        trans.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ROLLBACK OCCURRED")
+    except sqlalchemy.exc.OperationalError as err:
+        trans.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="OPS ERROR")
 
 
 @ticket_router.get("/get-comments/{ticket_id}")
 def get_comments(ticket_id: int, db: Engine = Depends(get_db)):
-    print(ticket_id)
-    return db.execute(f"""CALL getCommentsByID(%s)""", (str(ticket_id))).all()
+    conn = db.connect()
+    trans = conn.begin()
+    try:
+        res = conn.execute(f"""CALL getCommentsByID(%s)""", (str(ticket_id))).all()
+        trans.commit()
+        return res
+    except sqlalchemy.exc.PendingRollbackError as err:
+        trans.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ROLLBACK OCCURRED")
+    except sqlalchemy.exc.OperationalError as err:
+        trans.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="OPS ERROR")
+
+
+
 
 
 @ticket_router.post("/complete-survey/{ticket_id}")
