@@ -1,6 +1,6 @@
 import sqlalchemy.exc
 
-from database import get_db
+from database import get_db, run_transaction
 from sqlalchemy.engine import Engine
 from fastapi import APIRouter
 from schemas import Ticket, Survey
@@ -10,30 +10,6 @@ ticket_router = APIRouter(
     prefix="/tickets",
     tags=['tickets']
 )
-
-
-def run_transaction(db, function, **kwargs):
-    conn = db.connect()
-    with conn.begin() as trans:
-        try:
-            res = function(conn, kwargs)
-            trans.commit()
-            return res
-        except sqlalchemy.exc.InterfaceError as err:
-            trans.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERNAL ERROR")
-        except sqlalchemy.exc.PendingRollbackError as err:
-            trans.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ROLLBACK OCCURRED")
-        except sqlalchemy.exc.OperationalError as err:
-            trans.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="OPS ERROR")
-        except sqlalchemy.exc.InvalidRequestError as err:
-            trans.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INVALID REQ")
-        except sqlalchemy.exc.InternalError as err:
-            trans.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INVALID REQ")
 
 
 @ticket_router.get("/get-tickets/{user_id}")
