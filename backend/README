@@ -1,0 +1,49 @@
+This is a full-stack web application hosted locally.
+
+The program was written and tested in PyCharm but any IDE which allows for javascript (React)
+and backend python concurrently (FastAPI) should suffice.
+
+The program requires that python3 and node.js. Pip is used to handle the backend dependencies and
+npm is used to handle the frontend dependencies. If python3 needs to be installed allow
+the installer to download pip as well.
+
+NodeJS installer: https://nodejs.org/en/download/
+Python3 installer: https://www.python.org/downloads/
+
+
+Execution steps:
+1: Open a terminal and go to the folder /CS5200-fengwLavrishinASchelbC/
+From here run the command "npm install" to pull the dependencies from package.json
+
+
+2: Move to /CS5200-fengwLavrishinASchelbC/backend and run the command:
+windows:    py -m pip install -r requirements.txt
+unix:     python3 -m pip install -r requirements.txt
+
+This should pull all the necessary dependencies.
+
+3: Ensure your localhost MySQL server is booted.
+
+4: Open two terminals in the IDE:
+
+5: in the first terminal go to/CS5200-fengwLavrishinASchelbC/backend and run the command:
+windows:    py main.py
+unix:     python3 main.py
+
+It should prompt you for your MySQL localhost's username/password.
+If the auth is successful the backend server will boot:
+Database connection was successful
+INFO:     Started server process [25847]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://localhost:8000 (Press CTRL+C to quit)
+
+
+6: In the second terminal go to the folder /CS5200-fengwLavrishinASchelbC/ run the command:
+npm start
+
+This should open a browser automatically
+If it does not, you can manually open the application in a browser at the url http://localhost:3000/
+
+Finished: At this point the application should run properly and you'll see a login screen.
+

@@ -4,12 +4,11 @@ from sqlalchemy.ext.declarative import declarative_base
 import time
 from fastapi import HTTPException, status
 
-# first_load = True
-# if first_load:
-#     username = input("Username: ").strip("")
-#     password = input("Password: ").strip("")
-username="root"
-password="F1shg0d12345!"
+first_load = True
+if first_load:
+    username = input("Username: ").strip("")
+    password = input("Password: ").strip("")
+
 # NO SPECIAL CHARACTERS IN THE PASSWORD THAT MIGHT CONFLICT WITH THE LOCALHOST STRING PARSING (@ IS BAD)
 
 
