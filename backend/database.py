@@ -64,6 +64,9 @@ def run_transaction(db, function, **kwargs):
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INVALID REQ")
         except sqlalchemy.exc.InternalError as err:
             trans.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INVALID REQ")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERNAL ERR")
+        except AssertionError as err:
+            trans.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ASSERTION ERROR")
         finally:
             conn.close()
