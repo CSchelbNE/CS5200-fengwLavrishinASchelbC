@@ -49,19 +49,25 @@ def run_transaction(db, function, **kwargs):
         try:
             res = function(conn, kwargs)
             trans.commit()
+            conn.close()
             return res
         except sqlalchemy.exc.InterfaceError as err:
             trans.rollback()
+            conn.close()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERNAL ERROR")
         except sqlalchemy.exc.PendingRollbackError as err:
             trans.rollback()
+            conn.close()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="ROLLBACK OCCURRED")
         except sqlalchemy.exc.OperationalError as err:
             trans.rollback()
+            conn.close()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="OPS ERROR")
         except sqlalchemy.exc.InvalidRequestError as err:
             trans.rollback()
+            conn.close()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INVALID REQ")
         except sqlalchemy.exc.InternalError as err:
             trans.rollback()
+            conn.close()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INVALID REQ")
