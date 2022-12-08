@@ -28,7 +28,7 @@ const FocalTicket = ({ticket}) => {
             </FormControl>
             <FormControl mb="3"  height="fit-content" className="d-flex flex-row align-items-center ms-3 me-3">
                 <FormLabel className="w-25">Technician: </FormLabel>
-                <Box p="1" m="1" className="w-75" height="fit-content" minHeight="2rem" borderWidth="1px">{ticket.technicians === null ? "Unassigned" : ticket.technicians}</Box>
+                <Box p="1" m="1" className="w-75" height="fit-content" minHeight="2rem" borderWidth="1px">{!ticket.technicians ? "Unassigned" : ticket.technicians}</Box>
             </FormControl>
             <FormControl mb="3" height="fit-content" className="d-flex flex-row align-items-center ms-3 me-3">
                 <FormLabel className="w-25">Status: </FormLabel>

@@ -2,10 +2,12 @@ import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 import time
 
-first_load = True
-if first_load:
-    username = input("Username: ").strip("")
-    password = input("Password: ").strip("")
+# first_load = True
+# if first_load:
+#     username = input("Username: ").strip("")
+#     password = input("Password: ").strip("")
+username="root"
+password="F1shg0d12345!"
 # NO SPECIAL CHARACTERS IN THE PASSWORD THAT MIGHT CONFLICT WITH THE LOCALHOST STRING PARSING (@ IS BAD)
 
 
