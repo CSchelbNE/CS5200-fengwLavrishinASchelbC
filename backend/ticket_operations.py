@@ -154,6 +154,9 @@ def create_ticket(ticket: Ticket, db: Engine = Depends(get_db)):
         except sqlalchemy.exc.InterfaceError as err:
             trans.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="INTERFACE ERROR")
+        except Exception as err:
+            trans.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="UNKNOWN SERVER ERR")
 
 
 @ticket_router.get("/get-comments/{ticket_id}")
