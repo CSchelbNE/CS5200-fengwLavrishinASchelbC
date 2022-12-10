@@ -1,5 +1,4 @@
 import passlib.exc
-import sqlalchemy.exc
 
 from database import get_db, run_transaction
 from sqlalchemy.engine import Engine
